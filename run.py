@@ -12,18 +12,6 @@ from itertools import product
 import pandas as pd
 
 
-# TODO create entry point
-
-# TODO in case of 1 session available: check if truly longitudinal study
-# TODO implement fieldmap handling
-# TODO CI
-
-# TODO switch to fs6 once it is released
-# TODO bvallist not working?
-# TODO license_key instead of license_file?
-
-
-
 #### FUNCTIONS
 
 # from https://github.com/BIDS-Apps/freesurfer/blob/master/run.py#L11
