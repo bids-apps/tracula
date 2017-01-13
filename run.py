@@ -44,7 +44,13 @@ def get_data(layout, subject_label, freesurfer_dir, session_label=""):
 
     dwi_files = [f.filename for f in layout.get(type="dwi", modality="dwi", ext="nii.gz", **subject_session_info)]
     bvecs_files = layout.get_bvecs(**subject_session_info)
+    if not bvecs_files:
+        # if bvecs only in root dir
+        bvecs_files = layout.get_bvecs()
     bvals_files = layout.get_bvals(**subject_session_info)
+    if not bvals_files:
+        # if bvals only in root dir
+        bvals_files = layout.get_bvals()
 
     # check if all data is there
     missing_data = False
