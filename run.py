@@ -234,15 +234,15 @@ parser.add_argument('analysis_level', help='Level of the analysis that will be p
                                            'group1: collects motion stats in one file, '
                                            'group2: collects single subject overall path stats in one file.',
                     choices=['participant', 'group1', 'group2'])
-
+parser.add_argument('--license_key', help='FreeSurfer license key - letters and numbers after "*" in the email '
+                                          'you received after registration. To register (for free) visit '
+                                          'https://surfer.nmr.mgh.harvard.edu/registration.html', required=True)
 parser.add_argument('--participant_label', help='The label of the participant that should be analyzed. The label '
                                                 'corresponds to sub-<participant_label> from the BIDS spec '
                                                 '(so it does not include "sub-"). If this parameter is not '
                                                 'provided all subjects should be analyzed. Multiple '
                                                 'participants can be specified with a space separated list.',
                     nargs="+")
-parser.add_argument('--license_file', help='FreeSurfer license file. To register (for free) visit '
-                                           'https://surfer.nmr.mgh.harvard.edu/registration.html', required=True)
 parser.add_argument('--freesurfer_dir', help='The directory with the freesurfer data. If not specified,'
                                              'output_dir is assumed to contain freesurfer data')
 parser.add_argument('-v', '--version', action='version', version='Tracula BIDS-App version {}'.format(
@@ -253,7 +253,6 @@ parser.add_argument('-v', '--version', action='version', version='Tracula BIDS-A
 #                     choices=["prep", "bedp", "path", "all"], default=["all"], nargs="+")
 
 args = parser.parse_args()
-
 
 ####
 if not args.freesurfer_dir:
@@ -266,9 +265,6 @@ if not os.path.exists(args.output_dir):
 if not os.path.exists(os.path.join(args.freesurfer_dir, "fsaverage")):
     run("cp -rf " + os.path.join(os.environ["SUBJECTS_DIR"], "fsaverage") + " " +
         os.path.join(args.freesurfer_dir, "fsaverage"), ignore_errors=True)
-
-# copy license file
-shutil.copy(args.license_file, os.path.join(os.environ["FREESURFER_HOME"], ".license"))
 
 # fixme
 # run("bids-validator " + args.bids_dir)
