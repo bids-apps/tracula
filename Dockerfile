@@ -3,7 +3,8 @@ FROM bids/base_fsl
 
 #### FreeSurfer
 RUN apt-get -y update && \
-    wget -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0-beta/freesurfer-Linux-centos6_x86_64-stable-v6-beta-20161028-4cfbf2a.tar.gz | tar zxv -C /opt \
+    wget -qO- ftp://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0-beta/freesurfer-Linux-centos6_x86_64-stable-v6-beta-20161028-4cfbf2a.tar.gz
+RUN tar zxv freesurfer-Linux-centos6_x86_64-stable-v6-beta-20161028-4cfbf2a.tar.gz -C /opt \
     --exclude='freesurfer/subjects/fsaverage_sym' \
     --exclude='freesurfer/subjects/fsaverage3' \
     --exclude='freesurfer/subjects/fsaverage4' \
