@@ -119,10 +119,12 @@ def create_dmrirc(freesurfer_dir, output_dir, subject_label, subject_session_inf
     return dmrirc_file
 
 
-def run_tract_all_hack(dmrirc_file, output_dir, subject_label, sessions):
+def run_tract_all_hack(dmrirc_file, output_dir, subject_label, sessions, stages):
     # run the processing steps prep, bedp and path
-    cmd = "trac-all -prep -c {}".format(dmrirc_file)
-    run(cmd)
+
+    if (("prep" in stages) or ("all" in stages)):
+        cmd = "trac-all -prep -c {}".format(dmrirc_file)
+        run(cmd)
 
     # FIXME with fs6b.6 bedp raises error check again with fs6
     # "bedpostx_mgh -n 2 /data/out/sub-lhabX0015/dmri
@@ -131,23 +133,25 @@ def run_tract_all_hack(dmrirc_file, output_dir, subject_label, sessions):
     # for now call bedp natively
     # when that is fixed remove if/else and just run:
     # cmd = "trac-all -bedp -c {}".format(dmrirc_file)
-    if sessions:
-        # long
-        for session in sessions:
-            subject_output_dir = os.path.join(output_dir, "sub-{sub}_ses-{ses}.long.sub-{sub}".format(
-                sub=subject_label, ses=session))
+    if (("bedp" in stages) or ("all" in stages)):
+        if sessions:
+            # long
+            for session in sessions:
+                subject_output_dir = os.path.join(output_dir, "sub-{sub}_ses-{ses}.long.sub-{sub}".format(
+                    sub=subject_label, ses=session))
+                cmd = "bedpostx %s/dmri -n 2" % subject_output_dir
+                print("*** CMD ***", cmd)
+                run(cmd)
+        else:
+            # cross
+            subject_output_dir = os.path.join(output_dir, "sub-" + subject_label)
             cmd = "bedpostx %s/dmri -n 2" % subject_output_dir
             print("*** CMD ***", cmd)
             run(cmd)
-    else:
-        # cross
-        subject_output_dir = os.path.join(output_dir, "sub-" + subject_label)
-        cmd = "bedpostx %s/dmri -n 2" % subject_output_dir
-        print("*** CMD ***", cmd)
-        run(cmd)
 
-    cmd = "trac-all -path -c {}".format(dmrirc_file)
-    run(cmd)
+    if (("path" in stages) or ("all" in stages)):
+        cmd = "trac-all -path -c {}".format(dmrirc_file)
+        run(cmd)
 
 
 def get_sessions(output_dir, subject_label):
@@ -256,6 +260,9 @@ parser.add_argument('--participant_label', help='The label of the participant th
                     nargs="+")
 parser.add_argument('--freesurfer_dir', help='The directory with the freesurfer data. If not specified,'
                                              'output_dir is assumed to contain freesurfer data')
+parser.add_argument('--stages', help='Participant-level trac-all stages to run. all will run prep, bedp and path',
+                    choices=["prep", "bedp", "path", "all"],
+                    default=["all"], nargs="+")
 parser.add_argument('-v', '--version', action='version', version='Tracula BIDS-App version {}'.format(
     __version__))
 
@@ -321,7 +328,7 @@ if args.analysis_level == "participant":
 
             # create dmrirc file and run trac-all commands
             dmrirc_file = create_dmrirc(args.freesurfer_dir, args.output_dir, subject_label, subject_session_info)
-            run_tract_all_hack(dmrirc_file, args.output_dir, subject_label, sessions)
+            run_tract_all_hack(dmrirc_file, args.output_dir, subject_label, sessions, args.stages)
 
 
 elif args.analysis_level == "group1":
