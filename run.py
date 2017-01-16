@@ -176,6 +176,11 @@ def load_subject_motion_file(output_dir, subject_label, session_label=""):
         df_subject.index = [subject_label]
         if session_label:
             df_subject["session_id"] = session_label
+            # bring session id to the front
+            c = df_subject.columns.tolist()
+            c.remove("session_id")
+            c = ["session_id"] + c
+            df_subject = df_subject[c]
         return df_subject
     else:
         warn("Missing motion file for %s (%s). Skipping this subject." % (subject_label, search_str))
