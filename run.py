@@ -75,7 +75,6 @@ def get_data(layout, subject_label, freesurfer_dir, session_label=""):
 
     for fss in freesurfer_subjects:
         if not os.path.exists(os.path.join(freesurfer_dir, fss, "scripts/recon-all.done")):
-            print(os.path.join(freesurfer_dir, fss, "scripts/recon-all.done"))
             warn("No freesurfer folder for subject %s" % subject_label)
             missing_data = True
 
