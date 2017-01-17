@@ -37,7 +37,8 @@ def get_data(layout, subject_label, freesurfer_dir, session_label=""):
 
     # long
     if session_label:
-        subject_session_info = {"subject": subject_label, "session": session_label}
+        # regex magic to avoid https://github.com/INCF/pybids/issues/25
+        subject_session_info = {"subject": subject_label, "session": "^" + session_label + "$"}
     # cross
     else:
         subject_session_info = {"subject": subject_label}
