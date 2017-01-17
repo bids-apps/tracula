@@ -1,7 +1,8 @@
 ## [WIP] TRACULA BIDS App
 ### Description
 This app implements [Freesurfer's](https://surfer.nmr.mgh.harvard.edu/)
-[TRACULA](https://surfer.nmr.mgh.harvard.edu/fswiki/Tracula) tool.
+[TRACULA ](https://surfer.nmr.mgh.harvard.edu/fswiki/Tracula)
+(TRActs Constrained by UnderLying Anatomy) tool.
 
 It takes cross sectional as well as longitudinal (multi session)
 input data.
