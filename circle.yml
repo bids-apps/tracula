@@ -38,11 +38,11 @@ test:
   #  # group level test for single session dataset: group2
   #  - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test1:/bids_dataset -v ${HOME}/outputs1:/outputs -v ${HOME}/data/ds114_test1_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs group2 --license_key="~/test.key" --freesurfer_dir /freesurfer :
   #      timeout: 21600
-    # participant level tests for a longitudinal dataset
-   - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test2:/bids_dataset -v ${HOME}/outputs2:/outputs -v ${HOME}/data/ds114_test2_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 01 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep :
-       timeout: 21600
-   - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test2:/bids_dataset -v ${HOME}/outputs2:/outputs -v ${HOME}/data/ds114_test2_freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 02 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep :
-       timeout: 21600
+  # participant level tests for a longitudinal dataset
+    - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test2:/bids_dataset -v ${HOME}/outputs2:/outputs -v ${HOME}/data/ds114_test2_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 01 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep :
+        timeout: 21600
+    - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test2:/bids_dataset -v ${HOME}/outputs2:/outputs -v ${HOME}/data/ds114_test2_freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 02 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep :
+        timeout: 21600
 #    # group level test for a longitudinal dataset: group1
 #    - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test2:/bids_dataset -v ${HOME}/outputs2:/outputs -v ${HOME}/data/ds114_test2_freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs group1 --license_key="~/test.key" --freesurfer_dir /freesurfer :
 #        timeout: 21600
