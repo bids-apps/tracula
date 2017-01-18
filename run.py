@@ -285,8 +285,7 @@ if not os.path.exists(args.output_dir):
 #         os.path.join(args.freesurfer_dir, "fsaverage"), ignore_errors=True)
 #     # shutil.copytree(os.path.join(os.environ["SUBJECTS_DIR"], "fsaverage"), os.path.join(args.freesurfer_dir, "fsaverage"))
 
-# fixme
-# run("bids-validator " + args.bids_dir)
+run("bids-validator " + args.bids_dir)
 
 layout = BIDSLayout(args.bids_dir)
 
