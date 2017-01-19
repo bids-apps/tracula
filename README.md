@@ -3,13 +3,23 @@
 ### Description
 This app implements [Freesurfer's](https://surfer.nmr.mgh.harvard.edu/)
 [TRACULA ](https://surfer.nmr.mgh.harvard.edu/fswiki/Tracula)
-(TRActs Constrained by UnderLying Anatomy) tool.
+(TRActs Constrained by UnderLying Anatomy) tool for
+sectional as well as longitudinal (multi session) input data.
 
-It takes cross sectional as well as longitudinal (multi session)
-input data.
+### Disclaimer
+This BIDS-App was tested with standard DWI data (without fieldmaps).
+If you would like to see it working with more complex data,
+[get in touch](https://github.com/bids-apps/tracula/issues).
+
 
 ### How to report errors
-https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSupport
+For Tracula-BIDS-Apps related problems, open an
+[issue](https://github.com/bids-apps/tracula/issues).
+
+For Tracula-relade errors contact the
+[Freesurfer mailing list](https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSupport).
+
+
 
 ### Acknowledgements
 https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferMethodsCitation
@@ -27,16 +37,47 @@ This App has the following command line arguments:
         XXX
         XXX
 
+
+##
+### Examples
 To run it in participant level mode (for one participant):
+#### Participant level
 
         docker run -ti --rm \
-        XXXXX
+         -v /data/ds114/sourcedata:/bids_dataset:ro \
+         -v /data/ds114/derivates/tracula:/outputs \
+         -v /data/ds114/derivates/freesurfer:/freesurfer \
+         bids/tracula \
+         /bids_dataset /outputs participant --participant_label 01 \
+         --license_key "XXXXXXXX" \
+         --freesurfer_dir /freesurfer
+
+
+#### Group level
 
 After doing this for all subjects (potentially in parallel) the group level analysis
-can be run:
+can be run.
+
+To aggregate motion statistics into one file (group1 stage), run:
 
         docker run -ti --rm \
-        XXX
+         -v /data/ds114/sourcedata:/bids_dataset:ro \
+         -v /data/ds114/derivates/tracula:/outputs \
+         -v /data/ds114/derivates/freesurfer:/freesurfer \
+         bids/tracula \
+         /bids_dataset /outputs group1 \
+         --license_key "XXXXXXXX" \
+         --freesurfer_dir /freesurfer
 
 
 
+To collect single subject overall path stats in one file (group2 stage), run:
+
+        docker run -ti --rm \
+         -v /data/ds114/sourcedata:/bids_dataset:ro \
+         -v /data/ds114/derivates/tracula:/outputs \
+         -v /data/ds114/derivates/freesurfer:/freesurfer \
+         bids/tracula \
+         /bids_dataset /outputs group2 \
+         --license_key "XXXXXXXX" \
+         --freesurfer_dir /freesurfer
