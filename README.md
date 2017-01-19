@@ -7,7 +7,9 @@ This app implements [Freesurfer's](https://surfer.nmr.mgh.harvard.edu/)
 sectional as well as longitudinal (multi session) input data.
 
 ### Disclaimer
-This BIDS-App was tested with standard DWI data (without fieldmaps).
+This BIDS-App was tested with [high-angular resolution
+diffusion weighted imaging (DWI) data without
+fieldmaps](https://openfmri.org/dataset/ds000114/).
 If you would like to see it working with more complex data,
 [get in touch](https://github.com/bids-apps/tracula/issues).
 
@@ -34,8 +36,53 @@ https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferMethodsCitation
 ### Usage
 This App has the following command line arguments:
 
-        XXX
-        XXX
+        usage: phys.py [-h] --license_key LICENSE_KEY
+                       [--participant_label PARTICIPANT_LABEL [PARTICIPANT_LABEL ...]]
+                       [--freesurfer_dir FREESURFER_DIR]
+                       [--stages {prep,bedp,path,all} [{prep,bedp,path,all} ...]] [-v]
+                       bids_dir output_dir {participant,group1,group2}
+
+        BIDS App for Tracula processing stream.
+        https://surfer.nmr.mgh.harvard.edu/fswiki/Tracula
+
+        positional arguments:
+          bids_dir              The directory with the input dataset formatted
+                                according to the BIDS standard.
+          output_dir            The directory where the output files should be stored.
+                                If you are running group level analysis this folder
+                                should be prepopulated with the results of
+                                theparticipant level analysis.
+          {participant,group1,group2}
+                                Level of the analysis that will be performed.
+                                "participant": reconstructs paths (trac-all -prep,
+                                -bedp and -path), "group1": collects motion stats in
+                                one file, "group2": collects single subject overall
+                                path stats in one file.
+
+        optional arguments:
+          -h, --help            show this help message and exit
+          --license_key LICENSE_KEY
+                                FreeSurfer license key - letters and numbers after "*"
+                                in the email you received after registration. To
+                                register (for free) visit
+                                https://surfer.nmr.mgh.harvard.edu/registration.html
+                                (default: None)
+          --participant_label PARTICIPANT_LABEL [PARTICIPANT_LABEL ...]
+                                The label of the participant that should be analyzed.
+                                The label corresponds to sub-<participant_label> from
+                                the BIDS spec (so it does not include "sub-"). If this
+                                parameter is not provided all subjects should be
+                                analyzed. Multiple participants can be specified with
+                                a space separated list. (default: None)
+          --freesurfer_dir FREESURFER_DIR
+                                The directory with the freesurfer data. If not
+                                specified, output_dir is assumed to be populated with
+                                freesurfer data (default: None)
+          --stages {prep,bedp,path,all} [{prep,bedp,path,all} ...]
+                                Participant-level trac-all stages to run. Passing "all" will
+                                run "prep", "bedp" and "path". (default: ['all'])
+          -v, --version         show program's version number and exit
+
 
 
 ##
