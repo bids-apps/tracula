@@ -1,4 +1,5 @@
 ## [WIP] TRACULA BIDS App
+[![CircleCI](https://circleci.com/gh/BIDS-Apps/tracula.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/BIDS-Apps/tracula)
 ### Description
 This app implements [Freesurfer's](https://surfer.nmr.mgh.harvard.edu/)
 [TRACULA ](https://surfer.nmr.mgh.harvard.edu/fswiki/Tracula)
