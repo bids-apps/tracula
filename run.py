@@ -259,9 +259,9 @@ parser.add_argument('--participant_label',
                          '(so it does not include "sub-"). If this parameter is not '
                          'provided all subjects should be analyzed. Multiple '
                          'participants can be specified with a space separated list.', nargs="+")
-parser.add_argument('--freesurfer_dir', help='The directory with the freesurfer data. If not specified,'
-                                             'output_dir is assumed to be populated with freesurfer data')
-parser.add_argument('--stages', help='Participant-level trac-all stages to run. '
+parser.add_argument('--freesurfer_dir', help='The directory with the freesurfer data. If not specified, '
+                                             'output_dir is assumed to be populated with freesurfer data.')
+parser.add_argument('--stages', help='Participant-level trac-all stages to run. Passing'
                                      '"all" will run "prep", "bedp" and "path". ',
                     choices=["prep", "bedp", "path", "all"], default=["all"], nargs="+")
 parser.add_argument('-v', '--version', action='version',
