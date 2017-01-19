@@ -236,7 +236,7 @@ def calculate_tmi(df):
 
 __version__ = open('/version').read()
 
-parser = argparse.ArgumentParser(description='Tracula processing stream. '
+parser = argparse.ArgumentParser(description='BIDS App for Tracula processing stream. '
                                              'https://surfer.nmr.mgh.harvard.edu/fswiki/Tracula')
 parser.add_argument('bids_dir', help='The directory with the input dataset '
                                      'formatted according to the BIDS standard.')
@@ -259,10 +259,10 @@ parser.add_argument('--participant_label', help='The label of the participant th
                                                 'participants can be specified with a space separated list.',
                     nargs="+")
 parser.add_argument('--freesurfer_dir', help='The directory with the freesurfer data. If not specified,'
-                                             'output_dir is assumed to contain freesurfer data')
-parser.add_argument('--stages', help='Participant-level trac-all stages to run. all will run prep, bedp and path',
-                    choices=["prep", "bedp", "path", "all"],
-                    default=["all"], nargs="+")
+                                             'output_dir is assumed to be populated with freesurfer data')
+parser.add_argument('--stages', help="Participant-level trac-all stages to run. "
+                                     "'all' will run 'prep', 'bedp' and 'path'",
+                    choices=["prep", "bedp", "path", "all"], default=["all"], nargs="+")
 parser.add_argument('-v', '--version', action='version', version='Tracula BIDS-App version {}'.format(
     __version__))
 
