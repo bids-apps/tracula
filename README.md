@@ -4,7 +4,7 @@
 This app implements [Freesurfer's](https://surfer.nmr.mgh.harvard.edu/)
 [TRACULA ](https://surfer.nmr.mgh.harvard.edu/fswiki/Tracula)
 (TRActs Constrained by UnderLying Anatomy) tool for
-sectional as well as longitudinal (multi session) input data.
+cross-sectional as well as longitudinal (multi session) input data.
 
 ### Disclaimer
 This BIDS-App was tested with [high-angular resolution
