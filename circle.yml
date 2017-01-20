@@ -18,7 +18,6 @@ dependencies:
     - if [[ ! -d ~/data/ds114_test2_freesurfer ]]; then wget -c -O ${HOME}/ds114_test2_freesurfer.tar "https://www.dropbox.com/s/qf3t2gnfa1te9r5/ds114_test2_freesurfer.tar?dl=0" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test2_freesurfer.tar -C ${HOME}/data; fi
     - if [[ ! -d ~/data/ds114_test1_tracula_precomp ]]; then wget -c -O ${HOME}/ds114_test1_tracula_precomp.tar "https://www.dropbox.com/s/aovt1ceybj614nk/ds114_test1_tracula_precomp.tar?dl=0" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test1_tracula_precomp.tar -C ${HOME}/data; fi
     - if [[ ! -d ~/data/ds114_test2_tracula_precomp ]]; then wget -c -O ${HOME}/ds114_test2_tracula_precomp.tar "https://www.dropbox.com/s/1zyae2rqslyygdm/ds114_test2_tracula_precomp.tar?dl=0" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test2_tracula_precomp.tar -C ${HOME}/data; fi
-
     - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
     - git describe --tags > version
     - docker build -t bids/${CIRCLE_PROJECT_REPONAME,,} . :
@@ -31,10 +30,10 @@ test:
     # print version
     - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test1:/bids_dataset -v ${HOME}/data/ds114_test1_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} --version
     # participant level tests for single session dataset
-#    - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test1:/bids_dataset -v ${HOME}/outputs1:/outputs -v ${HOME}/data/ds114_test1_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 01 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep:
-#        timeout: 21600
-#    - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test1:/bids_dataset -v ${HOME}/outputs1:/outputs -v ${HOME}/data/ds114_test1_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 02 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep :
-#        timeout: 21600
+    - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test1:/bids_dataset -v ${HOME}/outputs1:/outputs -v ${HOME}/data/ds114_test1_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 01 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep:
+        timeout: 21600
+    - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test1:/bids_dataset -v ${HOME}/outputs1:/outputs -v ${HOME}/data/ds114_test1_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 02 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep :
+        timeout: 21600
     # group level test for single session dataset: group1
     - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test1:/bids_dataset -v ${HOME}/data/ds114_test1_tracula_precomp:/outputs -v ${HOME}/data/ds114_test1_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs group1 --license_key="~/test.key" --freesurfer_dir /freesurfer && mkdir -p ${HOME}/outputs1/ && sudo mv ${HOME}/data/ds114_test1_tracula_precomp/00_group* ${HOME}/outputs1/ :
         timeout: 21600
@@ -42,10 +41,10 @@ test:
     - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test1:/bids_dataset -v ${HOME}/data/ds114_test1_tracula_precomp:/outputs -v ${HOME}/data/ds114_test1_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs group2 --license_key="~/test.key" --freesurfer_dir /freesurfer && mkdir -p ${HOME}/outputs1/ && sudo mv ${HOME}/data/ds114_test1_tracula_precomp/00_group* ${HOME}/outputs1/ :
         timeout: 21600
   # participant level tests for a longitudinal dataset
-#    - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test2:/bids_dataset -v ${HOME}/outputs2:/outputs -v ${HOME}/data/ds114_test2_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 01 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep :
-#        timeout: 21600
-#    - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test2:/bids_dataset -v ${HOME}/outputs2:/outputs -v ${HOME}/data/ds114_test2_freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 02 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep :
-#        timeout: 21600
+    - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test2:/bids_dataset -v ${HOME}/outputs2:/outputs -v ${HOME}/data/ds114_test2_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 01 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep :
+        timeout: 21600
+    - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test2:/bids_dataset -v ${HOME}/outputs2:/outputs -v ${HOME}/data/ds114_test2_freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 02 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep :
+        timeout: 21600
     # group level test for a longitudinal dataset: group1
     - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test2:/bids_dataset -v ${HOME}/data/ds114_test2_tracula_precomp:/outputs -v ${HOME}/data/ds114_test2_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs group1 --license_key="~/test.key" --freesurfer_dir /freesurfer && mkdir -p ${HOME}/outputs2/ && sudo mv ${HOME}/data/ds114_test2_tracula_precomp/00_group* ${HOME}/outputs2/ :
         timeout: 21600
