@@ -106,7 +106,7 @@ This App has the following command line arguments:
           --freesurfer_dir FREESURFER_DIR
                                 The directory with the freesurfer data. If not
                                 specified, output_dir is assumed to be populated with
-                                freesurfer data (default: None)
+                                freesurfer data. (default: None)
           --stages {prep,bedp,path,all} [{prep,bedp,path,all} ...]
                                 Participant-level trac-all stages to run. Passing "all" will
                                 run "prep", "bedp" and "path". (default: ['all'])
