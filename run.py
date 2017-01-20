@@ -4,7 +4,7 @@ import os
 
 from bids.grabbids import BIDSLayout
 
-from tracula import run, participant_level, group_level_motion_stats, group_level_tract_overall_stats
+from tracula import run_cmd, participant_level, group_level_motion_stats, group_level_tract_overall_stats
 
 __version__ = open('/version').read()
 
@@ -56,7 +56,7 @@ if not os.path.exists(args.output_dir):
 #         os.path.join(args.freesurfer_dir, "fsaverage"), ignore_errors=True)
 #     # shutil.copytree(os.path.join(os.environ["SUBJECTS_DIR"], "fsaverage"), os.path.join(args.freesurfer_dir, "fsaverage"))
 
-run("bids-validator " + args.bids_dir)
+run_cmd("bids-validator " + args.bids_dir)
 
 layout = BIDSLayout(args.bids_dir)
 

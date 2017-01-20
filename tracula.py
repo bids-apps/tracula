@@ -10,8 +10,8 @@ import pandas as pd
 
 from run import layout
 
-
-def run(command, env={}, ignore_errors=False):
+# from https://github.com/BIDS-Apps/freesurfer/blob/master/run.py#L11
+def run_cmd(command, env={}, ignore_errors=False):
     merged_env = os.environ
     merged_env.update(env)
     # DEBUG env triggers freesurfer to produce gigabytes of files
@@ -120,7 +120,7 @@ def run_tract_all_hack(dmrirc_file, output_dir, subject_label, sessions, stages)
 
     if (("prep" in stages) or ("all" in stages)):
         cmd = "trac-all -prep -c {}".format(dmrirc_file)
-        run(cmd)
+        run_cmd(cmd)
 
     # FIXME with fs6b.6 bedp raises error check again with fs6
     # "bedpostx_mgh -n 2 /data/out/sub-lhabX0015/dmri
@@ -137,17 +137,17 @@ def run_tract_all_hack(dmrirc_file, output_dir, subject_label, sessions, stages)
                     sub=subject_label, ses=session))
                 cmd = "bedpostx %s/dmri -n 2" % subject_output_dir
                 print("*** CMD ***", cmd)
-                run(cmd)
+                run_cmd(cmd)
         else:
             # cross
             subject_output_dir = os.path.join(output_dir, "sub-" + subject_label)
             cmd = "bedpostx %s/dmri -n 2" % subject_output_dir
             print("*** CMD ***", cmd)
-            run(cmd)
+            run_cmd(cmd)
 
     if (("path" in stages) or ("all" in stages)):
         cmd = "trac-all -path -c {}".format(dmrirc_file)
-        run(cmd)
+        run_cmd(cmd)
 
 
 def get_sessions(output_dir, subject_label):
@@ -327,7 +327,7 @@ def group_level_tract_overall_stats(args, subjects_to_analyze):
         tract_stats_file = os.path.join(group_output_dir, tract + "_stats.tsv")
         cmd = "tractstats2table --load-pathstats-from-file {} --overall --tablefile {}".format(
             tract_file_list_output_file, tract_stats_file)
-        run(cmd)
+        run_cmd(cmd)
 
         # reformat tract stats file
         df = pd.read_csv(tract_stats_file, sep="\t")
