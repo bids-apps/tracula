@@ -20,6 +20,7 @@ RUN mkdir /local-scratch
 
 RUN mkdir -p /code
 COPY run.py /code/run.py
+COPY tracula.py /code/tracula.py
 RUN chmod +x /code/run.py
 
 COPY version /version
