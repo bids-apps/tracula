@@ -29,9 +29,38 @@ https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferMethodsCitation
 ##
 
 ### Analysis levels
-- participant: tract reconstruction
-- group1: motion stats
-- group2: overall tract stats
+
+- **participant**: Tract reconstruction
+
+    Performs the three steps (prep, bedp, path) of Tracula's `trac-all`,
+    reconstructing major fiber tracts form Freesurfer outputs and
+    DWI raw data.
+    All data is written into *<output_dir>*.
+
+- **group1**: Motion statistics
+
+    Collects motion statistics for multiple subjects into one file.
+    Additionally, total motion index (TMI, according to
+    [Yendiki et al., 2013](http://doi.org/10.1016/j.neuroimage.2013.11.027)).
+    Output is written to
+    *<output_dir>/00_group1_motion_stats/group_motion.tsv*.
+
+    *Note*: In deviation to the original equation
+    (which includes rotation, translation, bad slices, dropout score),
+    this implementation of TMI only considers those measures
+    that show enought variance for normalization (i.e., don't
+    produce NaNs - often seen in 'PercentBadSlices' and
+    'AvgDropoutScore'). The measures that went into the
+    calculation can be found in the *TMI_info* column of the
+    output file.
+
+- **group2**: Overall tract statistics
+
+    Collects characteristics of a tract (average FA...)
+    for multiple subjects.
+    Output is written to
+    *<output_dir>/00_group2_tract_stats/<tract_name>_stats.tsv*.
+
 
 ### Usage
 This App has the following command line arguments:
@@ -99,6 +128,10 @@ To run it in participant level mode (for one participant):
          --license_key "XXXXXXXX" \
          --freesurfer_dir /freesurfer
 
+**Note that** the path specified in --freesurfer_dir needs to be the
+mount point inside the docker container (e.g., */freesurfer*, specified
+in the 4th line of the previous command, after the ":"), not the
+path on your hard drive (e.g., */data/ds114/derivates/freesurfer*)
 
 #### Group level
 
