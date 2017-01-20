@@ -8,7 +8,6 @@ from warnings import warn
 
 import pandas as pd
 
-from run import layout
 
 # from https://github.com/BIDS-Apps/freesurfer/blob/master/run.py#L11
 def run_cmd(command, env={}, ignore_errors=False):
@@ -228,7 +227,7 @@ def calculate_tmi(df):
     return df
 
 
-def participant_level(args, subjects_to_analyze):
+def participant_level(args, layout, subjects_to_analyze):
     global subject_label, sessions, session_label
     for subject_label in subjects_to_analyze:
         subject_session_info = OrderedDict()

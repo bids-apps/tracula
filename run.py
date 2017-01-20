@@ -66,7 +66,7 @@ else:
     subjects_to_analyze = layout.get_subjects()
 
 if args.analysis_level == "participant":
-    participant_level(args, subjects_to_analyze)
+    participant_level(args, layout, subjects_to_analyze)
 
 elif args.analysis_level == "group1":
     group_level_motion_stats(args, subjects_to_analyze)
