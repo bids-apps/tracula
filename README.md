@@ -1,7 +1,8 @@
-## [WIP] TRACULA BIDS App
+## TRACULA BIDS App
 [![CircleCI](https://circleci.com/gh/BIDS-Apps/tracula.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/BIDS-Apps/tracula)
 ### Description
-This app implements [Freesurfer's](https://surfer.nmr.mgh.harvard.edu/)
+This [BIDS App](https://bids-apps.neuroimaging.io) implements
+[Freesurfer's](https://surfer.nmr.mgh.harvard.edu/)
 [TRACULA ](https://surfer.nmr.mgh.harvard.edu/fswiki/Tracula)
 (TRActs Constrained by UnderLying Anatomy) tool for
 cross-sectional as well as longitudinal (multi session) input data.
@@ -27,6 +28,13 @@ For Tracula-relade errors contact the
 https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferMethodsCitation
 
 ##
+
+### Data
+Tracula requires one DWI volume and a Freesurfer reconstruction
+per participant (or session if the data is longitudinal).
+The Freesurfer reconstruction should be performed with the
+[Freesurfer BIDS App](https://github.com/bids-apps/freesurfer)
+(or at least follow the BIDS naming scheme).
 
 ### Analysis levels
 
