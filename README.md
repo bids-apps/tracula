@@ -1,5 +1,7 @@
 ## TRACULA BIDS App
 [![CircleCI](https://circleci.com/gh/BIDS-Apps/tracula.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/BIDS-Apps/tracula)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.257518.svg)](https://doi.org/10.5281/zenodo.257518)
+
 ### Description
 This [BIDS App](https://bids-apps.neuroimaging.io) implements
 [Freesurfer's](https://surfer.nmr.mgh.harvard.edu/)
@@ -25,7 +27,21 @@ For Tracula-relade errors contact the
 
 
 ### Acknowledgements
-https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferMethodsCitation
+If you use this tool please cite the following sources:
+
+- *Franziskus Liem, & Krzysztof J. Gorgolewski. (2017).
+BIDS-Apps/tracula: v6.0.0.beta-0.
+Zenodo. http://doi.org/10.5281/zenodo.257518*
+
+- The BIDS Apps
+[preprint](http://biorxiv.org/content/early/2016/10/20/079145):
+*Krzysztof J. Gorgolewski et al. (2017).
+BIDS Apps: Improving ease of use, accessibility and reproducibility
+of neuroimaging data analysis methods.
+doi: https://doi.org/10.1101/079145*
+
+- The relevant Freesurfer
+[references](https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferMethodsCitation).
 
 ##
 
