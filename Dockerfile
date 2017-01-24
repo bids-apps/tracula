@@ -1,4 +1,4 @@
-FROM fliem/tracula_base:fs6b.1
+FROM fliem/tracula_base:fs6
 
 RUN sudo apt-get update && apt-get install -y python3
 RUN sudo apt-get update && apt-get install -y python3-pip
