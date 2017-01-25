@@ -1,6 +1,6 @@
 ## TRACULA BIDS App
 [![CircleCI](https://circleci.com/gh/BIDS-Apps/tracula.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/BIDS-Apps/tracula)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.257518.svg)](https://doi.org/10.5281/zenodo.257518)
+[![DOI](https://zenodo.org/badge/77473131.svg)](https://zenodo.org/badge/latestdoi/77473131)
 
 ### Description
 This [BIDS App](https://bids-apps.neuroimaging.io) implements
@@ -31,7 +31,7 @@ If you use this tool please cite the following sources:
 
 - *Franziskus Liem, & Krzysztof J. Gorgolewski. (2017).
 BIDS-Apps/tracula: v6.0.0-0.
-Zenodo.* [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.257518.svg)](https://doi.org/10.5281/zenodo.257518)
+Zenodo.* [![DOI](https://zenodo.org/badge/77473131.svg)](https://zenodo.org/badge/latestdoi/77473131)
 
 - The BIDS Apps
 [preprint](http://biorxiv.org/content/early/2016/10/20/079145):
