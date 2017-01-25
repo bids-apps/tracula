@@ -2,7 +2,8 @@ FROM fliem/tracula_base:fs6
 
 RUN sudo apt-get update && apt-get install -y python3
 RUN sudo apt-get update && apt-get install -y python3-pip
-RUN pip3 install pybids pandas ipython
+RUN pip3 install pandas
+RUN pip3 install pybids
 
 RUN apt-get install -y tree htop
 RUN apt-get install -y tcsh
