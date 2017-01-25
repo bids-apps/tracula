@@ -32,13 +32,13 @@ def get_data(layout, subject_label, freesurfer_dir, session_label=""):
 
     # long
     if session_label:
-        # regex magic to avoid https://github.com/INCF/pybids/issues/25
-        subject_session_info = {"subject": subject_label, "session": "^" + session_label + "$"}
+        subject_session_info = {"subject": subject_label, "session": session_label}
     # cross
     else:
         subject_session_info = {"subject": subject_label}
 
-    dwi_files = [f.filename for f in layout.get(type="dwi", modality="dwi", extensions="nii.gz", **subject_session_info)]
+    dwi_files = [f.filename for f in
+                 layout.get(type="dwi", modality="dwi", extensions="nii.gz", **subject_session_info)]
     bvecs_files = layout.get_bvecs(**subject_session_info)
     if not bvecs_files:
         # if bvecs only in root dir
