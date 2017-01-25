@@ -30,8 +30,8 @@ For Tracula-relade errors contact the
 If you use this tool please cite the following sources:
 
 - *Franziskus Liem, & Krzysztof J. Gorgolewski. (2017).
-BIDS-Apps/tracula: v6.0.0.beta-0.
-Zenodo. http://doi.org/10.5281/zenodo.257518*
+BIDS-Apps/tracula: v6.0.0-0.
+Zenodo.* [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.257518.svg)](https://doi.org/10.5281/zenodo.257518)
 
 - The BIDS Apps
 [preprint](http://biorxiv.org/content/early/2016/10/20/079145):
