@@ -9,6 +9,8 @@ This [BIDS App](https://bids-apps.neuroimaging.io) implements
 (TRActs Constrained by UnderLying Anatomy) tool for
 cross-sectional as well as longitudinal (multi session) input data.
 
+This tool is based on Freesurfer v6.0.0
+
 ### Disclaimer
 This BIDS-App was tested with [high-angular resolution
 diffusion weighted imaging (DWI) data without
@@ -30,8 +32,7 @@ For Tracula-relade errors contact the
 If you use this tool please cite the following sources:
 
 - *Franziskus Liem, & Krzysztof J. Gorgolewski. (2017).
-BIDS-Apps/tracula: v6.0.0-0.
-Zenodo.* [![DOI](https://zenodo.org/badge/77473131.svg)](https://zenodo.org/badge/latestdoi/77473131)
+BIDS-Apps/tracula.* [![DOI](https://zenodo.org/badge/77473131.svg)](https://zenodo.org/badge/latestdoi/77473131)
 
 - The BIDS Apps
 [preprint](http://biorxiv.org/content/early/2016/10/20/079145):
