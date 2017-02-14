@@ -231,6 +231,7 @@ def participant_level(args, layout, subjects_to_analyze):
     global subject_label, sessions, session_label
     for subject_label in subjects_to_analyze:
         subject_session_info = OrderedDict()
+        valid_sessions = []
 
         sessions = layout.get_sessions(subject=subject_label)
         if sessions:
@@ -245,6 +246,7 @@ def participant_level(args, layout, subjects_to_analyze):
                                                                   "bvecs_files": bvecs_files,
                                                                   "bvals_files": bvals_files,
                                                                   "base": "sub-" + subject_label}
+                    valid_sessions.append(session_label)
 
         else:
             subject_session_name = "sub-" + subject_label
@@ -262,7 +264,7 @@ def participant_level(args, layout, subjects_to_analyze):
 
             # create dmrirc file and run trac-all commands
             dmrirc_file = create_dmrirc(args.freesurfer_dir, args.output_dir, subject_label, subject_session_info)
-            run_tract_all_hack(dmrirc_file, args.output_dir, subject_label, sessions, args.stages)
+            run_tract_all_hack(dmrirc_file, args.output_dir, subject_label, valid_sessions, args.stages)
 
 
 def group_level_motion_stats(args, subjects_to_analyze):
