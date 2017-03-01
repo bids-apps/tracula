@@ -68,7 +68,7 @@ The Freesurfer reconstruction should be performed with the
     Additionally, total motion index (TMI, according to
     [Yendiki et al., 2013](http://doi.org/10.1016/j.neuroimage.2013.11.027)).
     Output is written to
-    `*{output_dir}/00_group1_motion_stats/group_motion.tsv`.
+    `{output_dir}/00_group1_motion_stats/group_motion.tsv`.
 
     *Note*: In deviation to the original equation
     (which includes rotation, translation, bad slices, dropout score),
