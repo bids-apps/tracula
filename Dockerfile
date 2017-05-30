@@ -55,6 +55,10 @@ ENV PATH=/usr/local/miniconda/bin:$PATH \
     LANG=C.UTF-8 \
     LC_ALL=C.UTF-8
 
+RUN 2to3-3.4 -w $FREESURFER_HOME/bin/aparcstats2table
+RUN 2to3-3.4 -w $FREESURFER_HOME/bin/asegstats2table
+RUN 2to3-3.4 -w $FREESURFER_HOME/bin/*.py
+
 RUN conda install pandas
 RUN pip install pybids
 
