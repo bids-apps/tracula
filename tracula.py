@@ -9,7 +9,7 @@ from warnings import warn
 import pandas as pd
 
 
-# from https://github.com/BIDS-Apps/freesurfer/blob/master/run.py#L11
+    # from https://github.com/BIDS-Apps/freesurfer/blob/master/run.py#L11
 def run_cmd(command, env={}, ignore_errors=False):
     merged_env = os.environ
     merged_env.update(env)
@@ -332,7 +332,7 @@ def group_level_tract_overall_stats(args, subjects_to_analyze):
             fi.write("\n".join(tract_file_list))
 
         tract_stats_file = os.path.join(group_output_dir, tract + "_stats.tsv")
-        cmd = "tractstats2table --load-pathstats-from-file {} --overall --tablefile {}".format(
+        cmd = "python2 `which tractstats2table` --load-pathstats-from-file {} --overall --tablefile {}".format(
             tract_file_list_output_file, tract_stats_file)
         run_cmd(cmd)
 

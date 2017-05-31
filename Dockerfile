@@ -47,21 +47,26 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
 RUN npm install -g bids-validator@0.19.8
 
-RUN curl -sSLO https://repo.continuum.io/miniconda/Miniconda3-4.3.11-Linux-x86_64.sh && \
-    bash Miniconda3-4.3.11-Linux-x86_64.sh -b -p /usr/local/miniconda && \
-    rm Miniconda3-4.3.11-Linux-x86_64.sh
+RUN apt-get install -y python3
+RUN apt-get install -y python3-pip
+RUN apt-get install -y python2
 
-ENV PATH=/usr/local/miniconda/bin:$PATH \
-    LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8
+RUN pip3 install pandas
+RUN pip3 install pybids
+#RUN curl -sSLO https://repo.continuum.io/miniconda/Miniconda3-4.3.11-Linux-x86_64.sh && \
+#    bash Miniconda3-4.3.11-Linux-x86_64.sh -b -p /usr/local/miniconda && \
+#    rm Miniconda3-4.3.11-Linux-x86_64.sh
+#
+#ENV PATH=/usr/local/miniconda/bin:$PATH \
+#    LANG=C.UTF-8 \
+#    LC_ALL=C.UTF-8
+#
+#RUN 2to3-3.4 -w $FREESURFER_HOME/bin/aparcstats2table
+#RUN 2to3-3.4 -w $FREESURFER_HOME/bin/asegstats2table
+#RUN 2to3-3.4 -w $FREESURFER_HOME/bin/tractstats2table
+#RUN 2to3-3.4 -w $FREESURFER_HOME/bin/*.py
 
-RUN 2to3-3.4 -w $FREESURFER_HOME/bin/aparcstats2table
-RUN 2to3-3.4 -w $FREESURFER_HOME/bin/asegstats2table
-RUN 2to3-3.4 -w $FREESURFER_HOME/bin/tractstats2table
-RUN 2to3-3.4 -w $FREESURFER_HOME/bin/*.py
 
-RUN conda install pandas
-RUN pip install pybids
 
 RUN mkdir /scratch
 RUN mkdir /local-scratch
