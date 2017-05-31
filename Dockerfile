@@ -49,7 +49,8 @@ RUN npm install -g bids-validator@0.19.8
 
 RUN apt-get install -y python3
 RUN apt-get install -y python3-pip
-RUN apt-get install -y python2
+RUN apt-get install -y python2.7
+RUN apt-get install -y python-pip
 
 RUN pip3 install pandas
 RUN pip3 install pybids
