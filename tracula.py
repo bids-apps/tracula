@@ -227,13 +227,19 @@ def calculate_tmi(df):
     return df
 
 
-def participant_level(args, layout, subjects_to_analyze):
+def participant_level(args, layout, subjects_to_analyze, sessions_to_analyze):
     global subject_label, sessions, session_label
     for subject_label in subjects_to_analyze:
         subject_session_info = OrderedDict()
         valid_sessions = []
 
         sessions = layout.get_sessions(subject=subject_label)
+        if sessions_to_analyze:
+            sessions_not_found = list(set(sessions_to_analyze) - set(sessions))
+            sessions = list(set(sessions) & set(sessions_to_analyze))
+            if sessions_not_found:
+                print("requested sessions %s not found for subject %s" % (" ".join(sessions_not_found), subject_label))
+
         if sessions:
             # long
             for session_label in sessions:
