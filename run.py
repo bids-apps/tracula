@@ -31,6 +31,13 @@ parser.add_argument('--participant_label',
                          '(so it does not include "sub-"). If this parameter is not '
                          'provided all subjects should be analyzed. Multiple '
                          'participants can be specified with a space separated list.', nargs="+")
+parser.add_argument('--session_label',
+                    help='The label of the sessions that should be analyzed. The label '
+                         'corresponds to ses-<session_label> from the BIDS spec '
+                         '(so it does not include "ses-"). If this parameter is not '
+                         'provided all sessions should be analyzed. Multiple '
+                         'sessions can be specified with a space separated list.', nargs="+")
+
 parser.add_argument('--freesurfer_dir', help='The directory with the freesurfer data. If not specified, '
                                              'output_dir is assumed to be populated with freesurfer data.')
 parser.add_argument('--stages', help='Participant-level trac-all stages to run. Passing'
@@ -66,7 +73,7 @@ else:
     subjects_to_analyze = layout.get_subjects()
 
 if args.analysis_level == "participant":
-    participant_level(args, layout, subjects_to_analyze)
+    participant_level(args, layout, subjects_to_analyze, args.session_label)
 
 elif args.analysis_level == "group1":
     group_level_motion_stats(args, subjects_to_analyze)
