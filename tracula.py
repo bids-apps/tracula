@@ -228,7 +228,6 @@ def calculate_tmi(df):
 
 
 def participant_level(args, layout, subjects_to_analyze, sessions_to_analyze):
-    global subject_label, sessions, session_label
     for subject_label in subjects_to_analyze:
         subject_session_info = OrderedDict()
         valid_sessions = []
@@ -274,7 +273,6 @@ def participant_level(args, layout, subjects_to_analyze, sessions_to_analyze):
 
 
 def group_level_motion_stats(args, subjects_to_analyze):
-    global df, subject_label, sessions, session_label
     # collect motion stats
     motion_output_dir = os.path.join(args.output_dir, "00_group1_motion_stats")
     if not os.path.exists(motion_output_dir):
@@ -297,7 +295,6 @@ def group_level_motion_stats(args, subjects_to_analyze):
 
 
 def group_level_tract_overall_stats(args, subjects_to_analyze):
-    global subject_label, sessions, session_label, df
     # run overall stats
     group_output_dir = os.path.join(args.output_dir, "00_group2_tract_stats")
     tract_file_list_dir = os.path.join(group_output_dir, "00_file_lists")
