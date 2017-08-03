@@ -57,14 +57,11 @@ def get_data(layout, subject_label, freesurfer_dir, truly_longitudinal_study, se
     if not bvals_files:
         raise Exception("No bvals files for subject %s %s" % (subject_label, session_label))
 
-    if session_label:
+    if session_label & truly_longitudinal_study:
         # long
-        if truly_longitudinal_study:
-            freesurfer_subjects = ["sub-{sub}".format(sub=subject_label),
-                                   "sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session_label),
-                                   "sub-{sub}_ses-{ses}.long.sub-{sub}".format(sub=subject_label, ses=session_label)]
-        else:
-            freesurfer_subjects = ["sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session_label)]
+        freesurfer_subjects = ["sub-{sub}".format(sub=subject_label),
+                               "sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session_label),
+                               "sub-{sub}_ses-{ses}.long.sub-{sub}".format(sub=subject_label, ses=session_label)]
 
     else:
         # cross
@@ -227,19 +224,16 @@ def calculate_tmi(df):
     return df
 
 
-def run_fs_if_not_available(args, subject_label, truly_longitudinal_study, sessions=[]):
+def run_fs_if_not_available(args, subject_label, sessions=[]):
     freesurfer_subjects = []
 
-    if sessions:
+    if len(sessions) > 1:
         # long
         for session_label in sessions:
-            if truly_longitudinal_study:
-                freesurfer_subjects.extend(["sub-{sub}".format(sub=subject_label),
-                                            "sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session_label),
-                                            "sub-{sub}_ses-{ses}.long.sub-{sub}".format(sub=subject_label,
-                                                                                        ses=session_label)])
-            else:
-                freesurfer_subjects.extend(["sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session_label)])
+            freesurfer_subjects.extend(["sub-{sub}".format(sub=subject_label),
+                                        "sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session_label),
+                                        "sub-{sub}_ses-{ses}.long.sub-{sub}".format(sub=subject_label,
+                                                                                    ses=session_label)])
     else:
         # cross
         freesurfer_subjects.extend(["sub-{sub}".format(sub=subject_label)])
@@ -249,29 +243,20 @@ def run_fs_if_not_available(args, subject_label, truly_longitudinal_study, sessi
             fs_missing = True
 
     if fs_missing:
-        if truly_longitudinal_study:
-            # run all stages
-            long_steps_str = ""
-        else:
-            # only run cross-sectional stage
-            long_steps_str = "--steps cross-sectional"
-
-        #
         if args.run_freesurfer_tests_only:
-            long_steps_str = "--steps cross-sectional"
-            autorecon_stages_str = "--stages autorecon1"
+            add_opt = "--steps cross-sectional --stages autorecon1"
         else:
-            autorecon_stages_str = ""
+            add_opt = ""
 
         cmd = "run_freesurfer.py {in_dir} {out_dir} participant " \
               "--participant_label {subject_label} " \
               "--license_key {license_key} " \
-              "--n_cpus {n_cpus} {long_steps_str}".format(in_dir=args.bids_dir,
-                                                          out_dir=args.freesurfer_dir,
-                                                          subject_label=subject_label,
-                                                          license_key=args.license_key,
-                                                          n_cpus=args.n_cpus,
-                                                          long_steps_str=long_steps_str)
+              "--n_cpus {n_cpus} {add_opt}".format(in_dir=args.bids_dir,
+                                                   out_dir=args.freesurfer_dir,
+                                                   subject_label=subject_label,
+                                                   license_key=args.license_key,
+                                                   n_cpus=args.n_cpus,
+                                                   add_opt=add_opt)
 
         print("Freesurfer for {} not found. Running recon-all.".format(subject_label))
         run_cmd(cmd)
@@ -329,7 +314,7 @@ def participant_level(args, layout, subjects_to_analyze, sessions_to_analyze):
 
         if valid_subject:
             # check for freesurfer and run if missing
-            run_fs_if_not_available(args, subject_label, truly_longitudinal_study, valid_sessions)
+            run_fs_if_not_available(args, subject_label, valid_sessions)
 
             if not args.run_freesurfer_tests_only:
                 # run full tracula processing
@@ -369,7 +354,8 @@ def participant_level(args, layout, subjects_to_analyze, sessions_to_analyze):
                         os.makedirs(subject_output_dir)
 
                     # create dmrirc file and run trac-all commands
-                    dmrirc_file = create_dmrirc(args.freesurfer_dir, args.output_dir, subject_label, subject_session_info)
+                    dmrirc_file = create_dmrirc(args.freesurfer_dir, args.output_dir, subject_label,
+                                                subject_session_info)
                     run_tract_all_hack(dmrirc_file, args.output_dir, subject_label, valid_sessions, args.stages,
                                        truly_longitudinal_study)
         else:
