@@ -47,6 +47,9 @@ parser.add_argument('-v', '--version', action='version',
                     version='Tracula BIDS-App version {}'.format(__version__))
 
 parser.add_argument('--n_cpus', help='Number of CPUs/cores available to use.', default=1, type=int)
+parser.add_argument('--run-freesurfer-tests-only', help='Dev option to enable freesurfer tests on circleci',
+                    dest="run_freesurfer_tests_only", action='store_true', default=False)
+
 
 args = parser.parse_args()
 
