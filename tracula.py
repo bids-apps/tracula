@@ -26,9 +26,10 @@ def run_cmd(command, env={}, ignore_errors=False):
         raise Exception("Non zero return code: %d" % process.returncode)
 
 
-def get_data(layout, subject_label, freesurfer_dir, session_label=""):
-    # collect filenames for subject (and session if longitudinal)
-    # returns None if some data is missing
+def get_data(layout, subject_label, freesurfer_dir, truly_longitudinal_study, session_label=""):
+    # collect filenames for one subject (and one session if longitudinal)
+    # for longitudinal pass session_label
+    # raises exception if some data is missing
 
     # long
     if session_label:
@@ -49,35 +50,31 @@ def get_data(layout, subject_label, freesurfer_dir, session_label=""):
         bvals_files = layout.get_bvals()
 
     # check if all data is there
-    missing_data = False
     if not dwi_files:
-        missing_data = True
-        warn("No DWI files for subject %s %s" % (subject_label, session_label))
+        raise Exception("No DWI files for subject %s %s" % (subject_label, session_label))
     if not bvecs_files:
-        missing_data = True
-        warn("No bvec files for subject %s %s" % (subject_label, session_label))
+        raise Exception("No bvec files for subject %s %s" % (subject_label, session_label))
     if not bvals_files:
-        missing_data = True
-        warn("No bvals files for subject %s %s" % (subject_label, session_label))
+        raise Exception("No bvals files for subject %s %s" % (subject_label, session_label))
 
     if session_label:
         # long
-        freesurfer_subjects = ["sub-{sub}".format(sub=subject_label),
-                               "sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session_label),
-                               "sub-{sub}_ses-{ses}.long.sub-{sub}".format(sub=subject_label, ses=session_label)]
+        if truly_longitudinal_study:
+            freesurfer_subjects = ["sub-{sub}".format(sub=subject_label),
+                                   "sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session_label),
+                                   "sub-{sub}_ses-{ses}.long.sub-{sub}".format(sub=subject_label, ses=session_label)]
+        else:
+            freesurfer_subjects = ["sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session_label)]
+
     else:
         # cross
         freesurfer_subjects = ["sub-{sub}".format(sub=subject_label)]
 
     for fss in freesurfer_subjects:
         if not os.path.exists(os.path.join(freesurfer_dir, fss, "scripts/recon-all.done")):
-            warn("No freesurfer folder for subject %s" % subject_label)
-            missing_data = True
+            raise Exception("No freesurfer folder for subject %s" % subject_label)
 
-    if missing_data:
-        return None, None, None
-    else:
-        return dwi_files, bvecs_files, bvals_files
+    return dwi_files, bvecs_files, bvals_files
 
 
 def create_dmrirc(freesurfer_dir, output_dir, subject_label, subject_session_info):
@@ -114,7 +111,7 @@ def create_dmrirc(freesurfer_dir, output_dir, subject_label, subject_session_inf
     return dmrirc_file
 
 
-def run_tract_all_hack(dmrirc_file, output_dir, subject_label, sessions, stages):
+def run_tract_all_hack(dmrirc_file, output_dir, subject_label, sessions, stages, truly_longitudinal_study):
     # run the processing steps prep, bedp and path
 
     if (("prep" in stages) or ("all" in stages)):
@@ -132,8 +129,11 @@ def run_tract_all_hack(dmrirc_file, output_dir, subject_label, sessions, stages)
         if sessions:
             # long
             for session in sessions:
-                subject_output_dir = os.path.join(output_dir, "sub-{sub}_ses-{ses}.long.sub-{sub}".format(
-                    sub=subject_label, ses=session))
+                if truly_longitudinal_study:
+                    subject_session_str = "sub-{sub}_ses-{ses}.long.sub-{sub}".format(sub=subject_label, ses=session)
+                else:
+                    subject_session_str = "sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session)
+                subject_output_dir = os.path.join(output_dir, subject_session_str)
                 cmd = "bedpostx %s/dmri -n 2" % subject_output_dir
                 print("*** CMD ***", cmd)
                 run_cmd(cmd)
@@ -151,7 +151,7 @@ def run_tract_all_hack(dmrirc_file, output_dir, subject_label, sessions, stages)
 
 def get_sessions(output_dir, subject_label):
     # returns sessions in tracula output dir for subject
-    found_folders = glob(os.path.join(output_dir, "sub-{sub}*.long.*".format(sub=subject_label)))
+    found_folders = glob(os.path.join(output_dir, "sub-{sub}_ses-*".format(sub=subject_label)))
     session_labels = []
     if found_folders:
         for f in found_folders:
@@ -163,7 +163,7 @@ def get_sessions(output_dir, subject_label):
 
 def load_subject_motion_file(output_dir, subject_label, session_label=""):
     if session_label:
-        long_str = "_ses-{ses}.long.sub-{sub}".format(ses=session_label, sub=subject_label)
+        long_str = "_ses-{ses}*".format(ses=session_label, sub=subject_label)
     else:
         long_str = ""
     search_str = os.path.join(output_dir, "sub-" + subject_label + long_str, "dmri", "dwi_motion.txt")
@@ -189,7 +189,7 @@ def load_subject_motion_file(output_dir, subject_label, session_label=""):
 def get_subject_pathstats_file(output_dir, subject_label, tract, session_label=""):
     # returns pathstats filename for one tract for subject (and session, if longitudinal)
     if session_label:
-        long_str = "_ses-{ses}.long.sub-{sub}".format(ses=session_label, sub=subject_label)
+        long_str = "_ses-{ses}*".format(ses=session_label, sub=subject_label)
     else:
         long_str = ""
 
@@ -227,49 +227,153 @@ def calculate_tmi(df):
     return df
 
 
+def run_fs_if_not_available(args, subject_label, truly_longitudinal_study, sessions=[]):
+    freesurfer_subjects = []
+
+    if sessions:
+        # long
+        for session_label in sessions:
+            if truly_longitudinal_study:
+                freesurfer_subjects.extend(["sub-{sub}".format(sub=subject_label),
+                                            "sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session_label),
+                                            "sub-{sub}_ses-{ses}.long.sub-{sub}".format(sub=subject_label,
+                                                                                        ses=session_label)])
+            else:
+                freesurfer_subjects.extend(["sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session_label)])
+    else:
+        # cross
+        freesurfer_subjects.extend(["sub-{sub}".format(sub=subject_label)])
+
+    for fss in freesurfer_subjects:
+        if not os.path.exists(os.path.join(args.freesurfer_dir, fss, "scripts/recon-all.done")):
+            fs_missing = True
+
+    if fs_missing:
+        if truly_longitudinal_study:
+            # run all stages
+            long_steps_str = ""
+        else:
+            # only run cross-sectional stage
+            long_steps_str = "--steps cross-sectional"
+
+        #
+        if args.run_freesurfer_tests_only:
+            long_steps_str = "--steps cross-sectional"
+            autorecon_stages_str = "--stages autorecon1"
+        else:
+            autorecon_stages_str = ""
+
+        cmd = "run_freesurfer.py {in_dir} {out_dir} participant " \
+              "--participant_label {subject_label} " \
+              "--license_key {license_key} " \
+              "--n_cpus {n_cpus} {long_steps_str}".format(in_dir=args.bids_dir,
+                                                          out_dir=args.freesurfer_dir,
+                                                          subject_label=subject_label,
+                                                          license_key=args.license_key,
+                                                          n_cpus=args.n_cpus,
+                                                          long_steps_str=long_steps_str)
+
+        print("Freesurfer for {} not found. Running recon-all.".format(subject_label))
+        run_cmd(cmd)
+
+
+def check_minimal_data_reqs(layout, subject_label, sessions_to_analyze):
+    # check if minimal data requirements for subjects are satisfied (at least 1 t1w and 1 dwi image)
+    # returns:
+    #   valid_subject: boolean; if True subject has sufficient data to run traclula
+    #   valid_sessions: list; for long data: list of sessions with sufficient data
+
+    n_dwi = len(layout.get(subject=subject_label, modality="dwi", type="dwi"))
+    n_t1w = len(layout.get(subject=subject_label, modality="anat", type="T1w"))
+    if (n_dwi > 0) & (n_t1w > 0):
+        valid_subject = True
+    else:
+        valid_subject = False
+
+    # get sessions that have at least one dwi and one t1w image
+    dwi_sessions = layout.get_sessions(subject=subject_label, modality="dwi", type="dwi")
+    t1w_sessions = layout.get_sessions(subject=subject_label, modality="anat", type="T1w")
+    sessions = list(set(dwi_sessions) & set(t1w_sessions))
+
+    if sessions_to_analyze:
+        sessions_not_found = list(set(sessions_to_analyze) - set(sessions))
+        sessions = list(set(sessions) & set(sessions_to_analyze))
+        if sessions_not_found:
+            print("requested sessions %s not found for subject %s" % (" ".join(sessions_not_found), subject_label))
+        if not sessions:
+            valid_subject = False
+
+    valid_sessions = []
+    if valid_subject:
+        for session in sessions:
+            n_dwi = len(layout.get(subject=subject_label, session=session, modality="dwi", type="dwi"))
+            n_t1w = len(layout.get(subject=subject_label, session=session, modality="anat", type="T1w"))
+            if (n_dwi > 0) & (n_t1w > 0):
+                valid_sessions.append(session)
+
+        # for cases that have zero sessions with both (t1w and dwi) data:
+        if len(valid_sessions) == 0:
+            if sessions_to_analyze:
+                valid_subject = False
+
+    return valid_subject, valid_sessions
+
+
 def participant_level(args, layout, subjects_to_analyze, sessions_to_analyze):
+    # if only one session is available for the entire study, use cross sectional stream
+    truly_longitudinal_study = True if len(layout.get_sessions()) > 1 else False
+
     for subject_label in subjects_to_analyze:
         subject_session_info = OrderedDict()
-        valid_sessions = []
+        valid_subject, valid_sessions = check_minimal_data_reqs(layout, subject_label, sessions_to_analyze)
 
-        sessions = layout.get_sessions(subject=subject_label)
-        if sessions_to_analyze:
-            sessions_not_found = list(set(sessions_to_analyze) - set(sessions))
-            sessions = list(set(sessions) & set(sessions_to_analyze))
-            if sessions_not_found:
-                print("requested sessions %s not found for subject %s" % (" ".join(sessions_not_found), subject_label))
+        if valid_subject:
+            # check for freesurfer and run if missing
+            run_fs_if_not_available(args, subject_label, truly_longitudinal_study, valid_sessions)
 
-        if sessions:
-            # long
-            for session_label in sessions:
-                subject_session_name = "sub-" + subject_label + "_ses-" + session_label
-                dwi_files, bvecs_files, bvals_files = get_data(layout, subject_label,
-                                                               args.freesurfer_dir,
-                                                               session_label=session_label)
-                if dwi_files:
+            if not args.run_freesurfer_tests_only:
+                # run full tracula processing
+                if valid_sessions:
+                    # long
+                    for session_label in valid_sessions:
+                        subject_session_name = "sub-" + subject_label + "_ses-" + session_label
+                        dwi_files, bvecs_files, bvals_files = get_data(layout, subject_label,
+                                                                       args.freesurfer_dir,
+                                                                       truly_longitudinal_study,
+                                                                       session_label=session_label)
+
+                        if truly_longitudinal_study:
+                            base_str = "sub-" + subject_label
+                        else:
+                            base_str = ""
+                        subject_session_info[subject_session_name] = {"dwi_files": dwi_files,
+                                                                      "bvecs_files": bvecs_files,
+                                                                      "bvals_files": bvals_files,
+                                                                      "base": base_str}
+
+                else:
+                    # cross
+                    subject_session_name = "sub-" + subject_label
+                    dwi_files, bvecs_files, bvals_files = get_data(layout,
+                                                                   subject_label,
+                                                                   args.freesurfer_dir,
+                                                                   truly_longitudinal_study)
                     subject_session_info[subject_session_name] = {"dwi_files": dwi_files,
                                                                   "bvecs_files": bvecs_files,
                                                                   "bvals_files": bvals_files,
-                                                                  "base": "sub-" + subject_label}
-                    valid_sessions.append(session_label)
+                                                                  "base": ""}
 
+                if subject_session_info:
+                    subject_output_dir = os.path.join(args.output_dir, "sub-" + subject_label)
+                    if not os.path.exists(subject_output_dir):
+                        os.makedirs(subject_output_dir)
+
+                    # create dmrirc file and run trac-all commands
+                    dmrirc_file = create_dmrirc(args.freesurfer_dir, args.output_dir, subject_label, subject_session_info)
+                    run_tract_all_hack(dmrirc_file, args.output_dir, subject_label, valid_sessions, args.stages,
+                                       truly_longitudinal_study)
         else:
-            subject_session_name = "sub-" + subject_label
-            dwi_files, bvecs_files, bvals_files = get_data(layout, subject_label, args.freesurfer_dir)
-            if dwi_files:
-                subject_session_info[subject_session_name] = {"dwi_files": dwi_files,
-                                                              "bvecs_files": bvecs_files,
-                                                              "bvals_files": bvals_files,
-                                                              "base": ""}
-
-        if subject_session_info:
-            subject_output_dir = os.path.join(args.output_dir, "sub-" + subject_label)
-            if not os.path.exists(subject_output_dir):
-                os.makedirs(subject_output_dir)
-
-            # create dmrirc file and run trac-all commands
-            dmrirc_file = create_dmrirc(args.freesurfer_dir, args.output_dir, subject_label, subject_session_info)
-            run_tract_all_hack(dmrirc_file, args.output_dir, subject_label, valid_sessions, args.stages)
+            warn("Subject {} has not enough data to run TRACULA".format(subject_label))
 
 
 def group_level_motion_stats(args, subjects_to_analyze):
