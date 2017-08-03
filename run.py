@@ -46,7 +46,7 @@ parser.add_argument('--stages', help='Participant-level trac-all stages to run. 
 parser.add_argument('-v', '--version', action='version',
                     version='Tracula BIDS-App version {}'.format(__version__))
 
-# parser.add_argument('--n_cpus', help='Number of CPUs/cores available to use.', default=1, type=int)
+parser.add_argument('--n_cpus', help='Number of CPUs/cores available to use.', default=1, type=int)
 
 args = parser.parse_args()
 
@@ -57,11 +57,6 @@ if not args.freesurfer_dir:
 # check output dir exists or create
 if not os.path.exists(args.output_dir):
     os.makedirs(args.output_dir)
-
-# if not os.path.exists(os.path.join(args.freesurfer_dir, "fsaverage")):
-#     run("cp -rf " + os.path.join(os.environ["SUBJECTS_DIR"], "fsaverage") + " " +
-#         os.path.join(args.freesurfer_dir, "fsaverage"), ignore_errors=True)
-#     # shutil.copytree(os.path.join(os.environ["SUBJECTS_DIR"], "fsaverage"), os.path.join(args.freesurfer_dir, "fsaverage"))
 
 run_cmd("bids-validator " + args.bids_dir)
 
