@@ -322,7 +322,6 @@ def participant_level(args, layout, subjects_to_analyze, sessions_to_analyze):
                 if valid_sessions:
                     # long
                     for session_label in valid_sessions:
-                        subject_session_name = "sub-" + subject_label + "_ses-" + session_label
                         dwi_files, bvecs_files, bvals_files = get_data(layout, subject_label,
                                                                        args.freesurfer_dir,
                                                                        truly_longitudinal_study,
@@ -330,8 +329,11 @@ def participant_level(args, layout, subjects_to_analyze, sessions_to_analyze):
 
                         if truly_longitudinal_study:
                             base_str = "sub-" + subject_label
+                            subject_session_name = "sub-" + subject_label + "_ses-" + session_label
                         else:
                             base_str = ""
+                            subject_session_name = "sub-" + subject_label
+
                         subject_session_info[subject_session_name] = {"dwi_files": dwi_files,
                                                                       "bvecs_files": bvecs_files,
                                                                       "bvals_files": bvals_files,
