@@ -57,7 +57,7 @@ def get_data(layout, subject_label, freesurfer_dir, truly_longitudinal_study, se
     if not bvals_files:
         raise Exception("No bvals files for subject %s %s" % (subject_label, session_label))
 
-    if session_label & truly_longitudinal_study:
+    if session_label and truly_longitudinal_study:
         # long
         freesurfer_subjects = ["sub-{sub}".format(sub=subject_label),
                                "sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session_label),
