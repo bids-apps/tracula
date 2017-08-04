@@ -56,7 +56,6 @@ COPY tracula.py /code/tracula.py
 RUN chmod +x /code/run.py
 
 # freesurfer repo
-# fixme
 RUN wget https://github.com/bids-apps/freesurfer/archive/v6.0.0-5.tar.gz && \
 tar xfz v6.0.0-5.tar.gz && rm -r v6.0.0-5.tar.gz && \
 cd freesurfer-6.0.0-5 && mv run.py /code/run_freesurfer.py
