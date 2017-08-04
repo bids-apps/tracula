@@ -94,8 +94,7 @@ def create_dmrirc(freesurfer_dir, output_dir, subject_label, subject_session_inf
                    "set subjlist = ({})".format(" ".join(subject_names)),
                    "set dcmlist = ({})".format(" ".join(dwi_files)),
                    "set bveclist = ({})".format(" ".join(bvecs_files)),
-                   "set bvalfile = {}".format(bvals_files[0])  # "set bvallist = ({})".format(" ".join(bvals_files)),
-                   #  OR? "set bvalfile =  " # fixme bvallist??
+                   "set bvallist = ({})".format(" ".join(bvals_files)),
                    ]
 
     if base_names:
