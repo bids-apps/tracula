@@ -128,7 +128,7 @@ def run_tract_all_hack(dmrirc_file, output_dir, subject_label, sessions, stages,
                 if truly_longitudinal_study:
                     subject_session_str = "sub-{sub}_ses-{ses}.long.sub-{sub}".format(sub=subject_label, ses=session)
                 else:
-                    subject_session_str = "sub-{sub}_ses-{ses}".format(sub=subject_label, ses=session)
+                    subject_session_str = "sub-{sub}".format(sub=subject_label)
                 subject_output_dir = os.path.join(output_dir, subject_session_str)
                 cmd = "bedpostx %s/dmri -n 2" % subject_output_dir
                 print("*** CMD ***", cmd)
