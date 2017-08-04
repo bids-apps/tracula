@@ -57,12 +57,9 @@ RUN chmod +x /code/run.py
 
 # freesurfer repo
 # fixme
-#RUN wget https://github.com/bids-apps/freesurfer/archive/v6.0.0-4.tar.gz && \
-#tar xfz v6.0.0-4.tar.gz && rm -r v6.0.0-4.tar.gz && \
-#cd freesurfer-6.0.0-4 && mv run.py /code/run_freesurfer.py
-RUN wget https://github.com/bids-apps/freesurfer/archive/master.tar.gz && \
-tar xfz master.tar.gz && rm -r master.tar.gz && \
-cd freesurfer-master && mv run.py /code/run_freesurfer.py
+RUN wget https://github.com/bids-apps/freesurfer/archive/v6.0.0-5.tar.gz && \
+tar xfz v6.0.0-5.tar.gz && rm -r v6.0.0-5.tar.gz && \
+cd freesurfer-6.0.0-5 && mv run.py /code/run_freesurfer.py
 
 RUN touch /code/version
 ENV PATH=/code:$PATH
