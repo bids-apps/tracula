@@ -54,7 +54,7 @@ test:
         timeout: 21600
     # starts freesurfer processing only
     #&& cat ${HOME}/outputs1/sub-01/scripts/trac-preproc.done :
-    - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test1:/bids_dataset -v ${HOME}/outputs1_fs_tests:/outputs bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs/tracula participant --participant_label 01 --license_key="~/test.key" --freesurfer_dir /outputs/freesurfer --run-freesurfer-tests-only :
+    - mkdir -p ${HOME}/outputs1_fs_tests/tracula && mkdir -p ${HOME}/outputs1_fs_tests/freesurfer && docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test1:/bids_dataset -v ${HOME}/outputs1_fs_tests:/outputs bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs/tracula participant --participant_label 01 --license_key="~/test.key" --freesurfer_dir /outputs/freesurfer --run-freesurfer-tests-only :
         timeout: 21600
 deployment:
   hub:
