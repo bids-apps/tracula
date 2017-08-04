@@ -238,6 +238,7 @@ def run_fs_if_not_available(args, subject_label, sessions=[]):
         # cross
         freesurfer_subjects.extend(["sub-{sub}".format(sub=subject_label)])
 
+    fs_missing = False
     for fss in freesurfer_subjects:
         if not os.path.exists(os.path.join(args.freesurfer_dir, fss, "scripts/recon-all.done")):
             fs_missing = True
