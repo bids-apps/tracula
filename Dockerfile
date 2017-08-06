@@ -41,6 +41,7 @@ RUN sudo apt-get update && apt-get install -y python3-pip
 RUN pip3 install pandas
 RUN pip3 install pybids
 RUN pip3 install nibabel
+RUN pip3 install joblib
 
 RUN sudo apt-get update && apt-get install -y tree htop
 RUN sudo apt-get update && apt-get install -y tcsh
