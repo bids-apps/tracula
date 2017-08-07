@@ -3,6 +3,7 @@ general:
     - "~/outputs1"
     - "~/outputs1_fs_tests"
     - "~/outputs2"
+    - "~/outputs2_1ses"
     - "~/outputs2_session_label"
 
 machine:
@@ -17,6 +18,7 @@ dependencies:
   override:
     - if [[ ! -d ~/data/ds114_test1 ]]; then wget -c -O ${HOME}/ds114_test1.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e54a326c613b01d7d3ed90" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test1.tar -C ${HOME}/data; fi
     - if [[ ! -d ~/data/ds114_test2 ]]; then wget -c -O ${HOME}/ds114_test2.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e549f9b83f6901d457d162" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test2.tar -C ${HOME}/data; fi
+    - if [[ ! -d ~/data/ds114_test2_1ses ]]; cp -r ~/data/ds114_test2 ~/data/ds114_test2_1ses && rm -r ~/data/ds114_test2_1ses/sub-*/ses-retest; fi
     - if [[ ! -d ~/data/ds114_test1_freesurfer ]]; then wget -c -O ${HOME}/ds114_test1_freesurfer.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882adf3b83f6901f564da49" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test1_freesurfer.tar -C ${HOME}/data; fi
     - if [[ ! -d ~/data/ds114_test2_freesurfer ]]; then wget -c -O ${HOME}/ds114_test2_freesurfer.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882b0e3b83f6901fb64da18" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test2_freesurfer.tar -C ${HOME}/data; fi
     - if [[ ! -d ~/data/ds114_test1_tracula_precomp ]]; then wget -c -O ${HOME}/ds114_test1_tracula_precomp.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882af28594d9001f447f03a" && mkdir -p ${HOME}/data && tar xf ${HOME}/ds114_test1_tracula_precomp.tar -C ${HOME}/data; fi
@@ -31,6 +33,9 @@ test:
   override:
     # print version
     - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test1:/bids_dataset -v ${HOME}/data/ds114_test1_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} --version
+    # participant level tests for 1ses dataset: cross dataset that has session level with one session
+    - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test2_1ses:/bids_dataset -v ${HOME}/outputs2_1ses:/outputs -v ${HOME}/data/ds114_test1_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 01 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep && cat ${HOME}/outputs2_1ses/sub-01/scripts/trac-preproc.done :
+        timeout: 21600
     # participant level tests for single session dataset
     - docker run -ti --rm --read-only -v /tmp:/tmp -v /var/tmp:/var/tmp -v ${HOME}/data/ds114_test1:/bids_dataset -v ${HOME}/outputs1:/outputs -v ${HOME}/data/ds114_test1_freesurfer:/freesurfer bids/${CIRCLE_PROJECT_REPONAME,,} /bids_dataset /outputs participant --participant_label 01 --license_key="~/test.key" --freesurfer_dir /freesurfer --stages prep && cat ${HOME}/outputs1/sub-01/scripts/trac-preproc.done :
         timeout: 21600
