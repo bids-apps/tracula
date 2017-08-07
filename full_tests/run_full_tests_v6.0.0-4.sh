@@ -2,7 +2,7 @@
 
 # run in /data.nfs/ds114/tracula_full_tests
 
-tracula_version=v6.0.0-4
+tracula_version=v6.0.0-4beta
 wd=$PWD/${tracula_version}
 data_dir=${wd}/data/
 out_root_dir=${wd}/out/
@@ -21,6 +21,7 @@ if [[ -e ${data_dir}/*.tar ]]; then rm -r ${data_dir}/*.tar; fi
 in_dir=${data_dir}/ds114_test1
 out_dir=${out_root_dir}/ds114_test1
 mkdir -p $out_dir
+chmod -R 777 $out_dir
 cd $out_dir
 
 screen -L docker run --rm -ti \
@@ -55,6 +56,7 @@ tar -zcvf ${wd}/results_tracula_${tracula_version}_ds114_test1.tar.gz ${out_dir}
 in_dir=${data_dir}/ds114_test2
 out_dir=${out_root_dir}/ds114_test2
 mkdir -p $out_dir
+chmod -R 777 $out_dir
 cd $out_dir
 
 screen -L docker run --rm -ti \
