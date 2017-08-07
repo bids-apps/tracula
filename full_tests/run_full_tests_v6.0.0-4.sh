@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# run in /data.nfs/ds114/tracula_full_tests
+# cd /data.nfs/ds114/tracula_full_tests
 # screen -L sh run_full_tests_....sh ds114_test1 and
 # screen -L sh run_full_tests_....sh ds114_test2
 
