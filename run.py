@@ -38,8 +38,10 @@ parser.add_argument('--session_label',
                          'provided all sessions should be analyzed. Multiple '
                          'sessions can be specified with a space separated list.', nargs="+")
 
-parser.add_argument('--freesurfer_dir', help='The directory with the freesurfer data. If not specified, '
-                                             'output_dir is assumed to be populated with freesurfer data.')
+parser.add_argument('--freesurfer_dir', help='The directory with the FreeSurfer data. If not specified, '
+                                             ' FreeSurfer data is written into output_dir. If FreeSurfer '
+                                             'data cannot be found for a subject, this app will run FreeSurfer as '
+                                             'well.')
 parser.add_argument('--stages', help='Participant-level trac-all stages to run. Passing'
                                      '"all" will run "prep", "bedp" and "path". ',
                     choices=["prep", "bedp", "path", "all"], default=["all"], nargs="+")
