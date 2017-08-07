@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # run in /data.nfs/ds114/tracula_full_tests
-#future versions: --n_cpus 32
 
 tracula_version=v6.0.0-3
 wd=$PWD/${tracula_version}
