@@ -8,7 +8,7 @@ ds_name=$1
 echo Running ${ds_name}
 
 tracula_version=v6.0.0-4beta
-wd=/data.nfs/ds114/tracula_full_tests/{tracula_version}
+wd=/data.nfs/ds114/tracula_full_tests/${tracula_version}
 
 data_dir=${wd}/data
 out_root_dir=${wd}/out
