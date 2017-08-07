@@ -128,20 +128,31 @@ def run_trac_parallel(stage, jobs_dir, dmrirc_file, n_cpus, job_names=[""], sep=
         print("Running", job_file)
         with open(job_file) as fi:
             cmd_list = fi.read().strip().split(sep)
+            cmd_list = [c for c in cmd_list if c]
 
         # create dirs before running bedpost
         if job_file.endswith("bedp.pre.txt"):
             for cmd in cmd_list:
                 subject_dir = cmd.split(" ")[1]
-                create_dirs = [
-                    os.path.join(subject_dir, "..", "dmri.bedpostX", "logs", "monitor"),
-                    os.path.join(subject_dir, "..", "dmri.bedpostX", "xfms")
-                ]
+                create_dirs = [os.path.join(subject_dir, "..", "dmri.bedpostX", "logs", "monitor"),
+                               os.path.join(subject_dir, "..", "dmri.bedpostX", "xfms")]
                 for d in create_dirs:
                     if not os.path.exists(d):
                         os.makedirs(d)
 
+        # for prep step: hack parallelization: tracula writes all prep commands (1/session + base) into one jobfile and
+        # executes them sequentially; the session steps can be run in parallel, after they are finished, base needs
+        # to be run
+        # this works because we have one dmrirc file per subject
+        if job_file.endswith("prep.txt"):
+            base_cmd = cmd_list.pop(-1)
+
+        print("Running commands", cmd_list)
         Parallel(n_jobs=n_cpus)(delayed(run_cmd)(cmd) for cmd in cmd_list)
+
+        if job_file.endswith("prep.txt"):
+            print("Running command", base_cmd)
+            run_cmd(base_cmd)
 
 
 def run_tract_all(dmrirc_file, output_dir, subject_label, stages, n_cpus):
@@ -153,7 +164,7 @@ def run_tract_all(dmrirc_file, output_dir, subject_label, stages, n_cpus):
 
     if (("prep" in stages) or ("all" in stages)):
         stage = "prep"
-        run_trac_parallel(stage, jobs_dir, dmrirc_file, n_cpus, job_names=[""])
+        run_trac_parallel(stage, jobs_dir, dmrirc_file, n_cpus, job_names=[""], sep=";")
 
     if (("bedp" in stages) or ("all" in stages)):
         stage = "bedp"
