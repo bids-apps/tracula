@@ -43,12 +43,13 @@ parser.add_argument('--freesurfer_dir', help='The directory with the freesurfer 
 parser.add_argument('--stages', help='Participant-level trac-all stages to run. Passing'
                                      '"all" will run "prep", "bedp" and "path". ',
                     choices=["prep", "bedp", "path", "all"], default=["all"], nargs="+")
-parser.add_argument('-v', '--version', action='version',
-                    version='Tracula BIDS-App version {}'.format(__version__))
-
 parser.add_argument('--n_cpus', help='Number of CPUs/cores available to use.', default=1, type=int)
 parser.add_argument('--run-freesurfer-tests-only', help='Dev option to enable freesurfer tests on circleci',
                     dest="run_freesurfer_tests_only", action='store_true', default=False)
+parser.add_argument('-v', '--version', action='version',
+                    version='Tracula BIDS-App version {}'.format(__version__))
+
+
 
 
 args = parser.parse_args()
