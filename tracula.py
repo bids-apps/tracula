@@ -166,7 +166,7 @@ def run_tract_all(dmrirc_file, output_dir, subject_label, stages, n_cpus):
 
 def get_sessions(output_dir, subject_label):
     # returns sessions in tracula output dir for subject
-    found_folders = glob(os.path.join(output_dir, "sub-{sub}_ses-*".format(sub=subject_label)))
+    found_folders = glob(os.path.join(output_dir, "sub-{sub}*.long.*".format(sub=subject_label)))
     session_labels = []
     if found_folders:
         for f in found_folders:
@@ -178,7 +178,7 @@ def get_sessions(output_dir, subject_label):
 
 def load_subject_motion_file(output_dir, subject_label, session_label=""):
     if session_label:
-        long_str = "_ses-{ses}*".format(ses=session_label, sub=subject_label)
+        long_str = "_ses-{ses}.long.sub-{sub}".format(ses=session_label, sub=subject_label)
     else:
         long_str = ""
     search_str = os.path.join(output_dir, "sub-" + subject_label + long_str, "dmri", "dwi_motion.txt")
@@ -204,7 +204,7 @@ def load_subject_motion_file(output_dir, subject_label, session_label=""):
 def get_subject_pathstats_file(output_dir, subject_label, tract, session_label=""):
     # returns pathstats filename for one tract for subject (and session, if longitudinal)
     if session_label:
-        long_str = "_ses-{ses}*".format(ses=session_label, sub=subject_label)
+        long_str = "_ses-{ses}.long.sub-{sub}".format(ses=session_label, sub=subject_label)
     else:
         long_str = ""
 
