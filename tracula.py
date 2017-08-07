@@ -5,6 +5,7 @@ from glob import glob
 from itertools import product
 from subprocess import Popen, PIPE
 from warnings import warn
+from joblib import Parallel, delayed
 
 import pandas as pd
 
@@ -107,42 +108,60 @@ def create_dmrirc(freesurfer_dir, output_dir, subject_label, subject_session_inf
     return dmrirc_file
 
 
-def run_tract_all_hack(dmrirc_file, output_dir, subject_label, sessions, stages, truly_longitudinal_study):
+def run_trac_parallel(stage, jobs_dir, dmrirc_file, n_cpus, job_names=[""], sep="\n"):
+    """
+    use dmrirc file to create jobfiles for traclula bedpost or path and runs jobs in parallel via joblib
+    stage: prep, bedp or path
+    """
+
+    jobs_filename = os.path.join(jobs_dir, stage + ".txt")
+
+    # create job files
+    cmd = "trac-all -{stage} -c {dmrirc_file} -jobs {jobs_filename}".format(stage=stage,
+                                                                            dmrirc_file=dmrirc_file,
+                                                                            jobs_filename=jobs_filename)
+    run_cmd(cmd)
+
+    # run jobs in parallel
+    for j in job_names:
+        job_file = os.path.join(jobs_dir, stage + j + ".txt")
+        print("Running", job_file)
+        with open(job_file) as fi:
+            cmd_list = fi.read().strip().split(sep)
+
+        # create dirs before running bedpost
+        if job_file.endswith("bedp.pre.txt"):
+            for cmd in cmd_list:
+                subject_dir = cmd.split(" ")[1]
+                create_dirs = [
+                    os.path.join(subject_dir, "..", "dmri.bedpostX", "logs", "monitor"),
+                    os.path.join(subject_dir, "..", "dmri.bedpostX", "xfms")
+                ]
+                for d in create_dirs:
+                    if not os.path.exists(d):
+                        os.makedirs(d)
+
+        Parallel(n_jobs=n_cpus)(delayed(run_cmd)(cmd) for cmd in cmd_list)
+
+
+def run_tract_all(dmrirc_file, output_dir, subject_label, stages, n_cpus):
     # run the processing steps prep, bedp and path
+    subject_output_dir = os.path.join(output_dir, "sub-" + subject_label)
+    jobs_dir = os.path.join(subject_output_dir, "jobs")
+    if not os.path.exists(jobs_dir):
+        os.makedirs(jobs_dir)
 
     if (("prep" in stages) or ("all" in stages)):
-        cmd = "trac-all -prep -c {}".format(dmrirc_file)
-        run_cmd(cmd)
+        stage = "prep"
+        run_trac_parallel(stage, jobs_dir, dmrirc_file, n_cpus, job_names=[""])
 
-    # FIXME with fs6b.6 bedp raises error check again with fs6
-    # "bedpostx_mgh -n 2 /data/out/sub-lhabX0015/dmri
-    # /opt/freesurfer/bin/bedpostx_mgh: 131: /opt/freesurfer/bin/bedpostx_mgh: Syntax error: "(" unexpected
-    # see "https://www.mail-archive.com/freesurfer@nmr.mgh.harvard.edu/msg38004.html
-    # for now call bedp natively
-    # when that is fixed remove if/else and just run:
-    # cmd = "trac-all -bedp -c {}".format(dmrirc_file)
     if (("bedp" in stages) or ("all" in stages)):
-        if sessions:
-            # long
-            for session in sessions:
-                if truly_longitudinal_study:
-                    subject_session_str = "sub-{sub}_ses-{ses}.long.sub-{sub}".format(sub=subject_label, ses=session)
-                else:
-                    subject_session_str = "sub-{sub}".format(sub=subject_label)
-                subject_output_dir = os.path.join(output_dir, subject_session_str)
-                cmd = "bedpostx %s/dmri -n 2" % subject_output_dir
-                print("*** CMD ***", cmd)
-                run_cmd(cmd)
-        else:
-            # cross
-            subject_output_dir = os.path.join(output_dir, "sub-" + subject_label)
-            cmd = "bedpostx %s/dmri -n 2" % subject_output_dir
-            print("*** CMD ***", cmd)
-            run_cmd(cmd)
+        stage = "bedp"
+        run_trac_parallel(stage, jobs_dir, dmrirc_file, n_cpus, job_names=[".pre", "", ".post"])
 
     if (("path" in stages) or ("all" in stages)):
-        cmd = "trac-all -path -c {}".format(dmrirc_file)
-        run_cmd(cmd)
+        stage = "path"
+        run_trac_parallel(stage, jobs_dir, dmrirc_file, n_cpus, job_names=[""])
 
 
 def get_sessions(output_dir, subject_label):
@@ -358,8 +377,7 @@ def participant_level(args, layout, subjects_to_analyze, sessions_to_analyze):
                     # create dmrirc file and run trac-all commands
                     dmrirc_file = create_dmrirc(args.freesurfer_dir, args.output_dir, subject_label,
                                                 subject_session_info)
-                    run_tract_all_hack(dmrirc_file, args.output_dir, subject_label, valid_sessions, args.stages,
-                                       truly_longitudinal_study)
+                    run_tract_all(dmrirc_file, args.output_dir, subject_label, args.stages, args.n_cpus)
         else:
             warn("Subject {} has not enough data to run TRACULA".format(subject_label))
 
