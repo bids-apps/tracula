@@ -33,7 +33,7 @@ def get_data(layout, subject_label, freesurfer_dir, truly_longitudinal_study, se
     # raises exception if some data is missing
 
     # long
-    if session_label:
+    if session_label and truly_longitudinal_study:
         subject_session_info = {"subject": subject_label, "session": session_label}
     # cross
     else:
@@ -337,7 +337,7 @@ def participant_level(args, layout, subjects_to_analyze, sessions_to_analyze):
 
             if not args.run_freesurfer_tests_only:
                 # run full tracula processing
-                if valid_sessions:
+                if valid_sessions and truly_longitudinal_study:
                     # long
                     for session_label in valid_sessions:
                         dwi_files, bvecs_files, bvals_files = get_data(layout, subject_label,
@@ -345,17 +345,11 @@ def participant_level(args, layout, subjects_to_analyze, sessions_to_analyze):
                                                                        truly_longitudinal_study,
                                                                        session_label=session_label)
 
-                        if truly_longitudinal_study:
-                            base_str = "sub-" + subject_label
-                            subject_session_name = "sub-" + subject_label + "_ses-" + session_label
-                        else:
-                            base_str = ""
-                            subject_session_name = "sub-" + subject_label
-
+                        subject_session_name = "sub-" + subject_label + "_ses-" + session_label
                         subject_session_info[subject_session_name] = {"dwi_files": dwi_files,
                                                                       "bvecs_files": bvecs_files,
                                                                       "bvals_files": bvals_files,
-                                                                      "base": base_str}
+                                                                      "base": "sub-" + subject_label}
 
                 else:
                     # cross
