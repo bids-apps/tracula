@@ -26,7 +26,7 @@ if [[ -e ${data_dir}/*.tar ]]; then rm -r ${data_dir}/*.tar; fi
 
 
 in_dir=${data_dir}/${ds_name}
-in_dir=${data_dir}/${ds_name}_freesurfer_precomp_v6.0.0
+fs_dir=${data_dir}/${ds_name}_freesurfer_precomp_v6.0.0
 out_dir=${out_root_dir}/${ds_name}
 mkdir -p $out_dir
 chmod -R 777 $out_dir
