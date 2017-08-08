@@ -4,7 +4,7 @@ import os
 
 from bids.grabbids import BIDSLayout
 
-from tracula import run_cmd, participant_level, group_level_motion_stats, group_level_tract_overall_stats
+from tracula import run_cmd, participant_level, group_level_motion_stats, group_level_tract_pathstats
 
 __version__ = open('/version').read()
 
@@ -80,4 +80,4 @@ elif args.analysis_level == "group1":
     group_level_motion_stats(args, subjects_to_analyze)
 
 elif args.analysis_level == "group2":
-    group_level_tract_overall_stats(args, subjects_to_analyze)
+    group_level_tract_pathstats(args, subjects_to_analyze)

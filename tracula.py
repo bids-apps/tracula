@@ -8,7 +8,7 @@ from warnings import warn
 from joblib import Parallel, delayed
 
 import pandas as pd
-
+import shutil
 
 # from https://github.com/BIDS-Apps/freesurfer/blob/master/run.py#L11
 def run_cmd(command, env={}, ignore_errors=False):
@@ -409,10 +409,11 @@ def group_level_motion_stats(args, subjects_to_analyze):
     df.to_csv(motion_output_file, sep="\t")
 
 
-def group_level_tract_overall_stats(args, subjects_to_analyze):
+def group_level_tract_pathstats(args, subjects_to_analyze):
     # run overall stats
     group_output_dir = os.path.join(args.output_dir, "00_group2_tract_stats")
-    tract_file_list_dir = os.path.join(group_output_dir, "00_file_lists")
+    overall_stats_output_dir = os.path.join(group_output_dir, "overall_stats")
+    tract_file_list_dir = os.path.join(overall_stats_output_dir, "00_file_lists")
     if not os.path.exists(tract_file_list_dir):
         os.makedirs(tract_file_list_dir)
     hemis = ["lh", "rh"]
@@ -443,7 +444,7 @@ def group_level_tract_overall_stats(args, subjects_to_analyze):
         with open(tract_file_list_output_file, "w") as fi:
             fi.write("\n".join(tract_file_list))
 
-        tract_stats_file = os.path.join(group_output_dir, tract + "_stats.tsv")
+        tract_stats_file = os.path.join(overall_stats_output_dir, tract + "_stats.tsv")
         cmd = "tractstats2table --load-pathstats-from-file {} --overall --tablefile {}".format(
             tract_file_list_output_file, tract_stats_file)
         run_cmd(cmd)
@@ -453,3 +454,24 @@ def group_level_tract_overall_stats(args, subjects_to_analyze):
         df["tract"] = tract
         df.rename(columns={tract: "participant_id"}, inplace=True)
         df.to_csv(tract_stats_file, sep="\t", index=False)
+
+    # create byvoxel stats
+    dmrirc_file = os.path.join(overall_stats_output_dir, "dmrirc_groupstats")
+    subjects = " ".join(df["participant_id"].tolist())
+    dmrirc_str = """
+    set dtroot = {}
+    set subjlist = ( {} )
+    """.format(args.output_dir, subjects)
+    with open(dmrirc_file, "w") as fi:
+        fi.write(dmrirc_str)
+
+    cmd = "trac-all -stat -c {}".format(dmrirc_file)
+    run_cmd(cmd)
+
+    # creates a folder in outdir; move folder
+    stats_source_folder = os.path.join(args.output_dir, "stats")
+    stats_dest_folder = os.path.join(group_output_dir, "byvoxel_stats")
+    shutil.move(stats_source_folder, stats_dest_folder)
+
+
+
