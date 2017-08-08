@@ -84,12 +84,13 @@ In this case `recon-all` should have been performed with the
     calculation can be found in the *TMI_info* column of the
     output file.
 
-- **group2**: Overall tract statistics
+- **group2**: Tract statistics
 
-    Collects characteristics of a tract (average FA...)
-    for multiple subjects.
-    Output is written to
-    `{output_dir}/00_group2_tract_stats/{tract_name}_stats.tsv`.
+    Collects tract stats for multiple subjects.
+    Mean stats of a tract (average FA...) are written to
+    `{output_dir}/00_group2_tract_stats/overall_stats/`.
+    Along-tract stats are written to
+    `{output_dir}/00_group2_tract_stats/byvoxel_stats/`.
 
 
 ### Usage
@@ -115,10 +116,10 @@ This App has the following command line arguments:
                             theparticipant level analysis.
       {participant,group1,group2}
                             Level of the analysis that will be performed.
-                            "participant": reconstructs paths (trac-all -prep,
-                            -bedp and -path), "group1": collects motion stats in
-                            one file, "group2": collects single subject overall
-                            path stats in one file.
+                            "participant": runs FreeSurfer and reconstructs paths
+                            (trac-all -prep, -bedp and -path), "group1": collects
+                            motion stats in one file, "group2": collects tract
+                            stats in one file.
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -155,7 +156,6 @@ This App has the following command line arguments:
                             Dev option to enable freesurfer tests on circleci
                             (default: False)
       -v, --version         show program's version number and exit
-
 
 ##
 ### Examples
@@ -194,7 +194,7 @@ To aggregate motion statistics into one file (group1 stage), run:
 
 
 
-To collect single subject overall path stats in one file (group2 stage), run:
+To aggregate tract statistics into one file  (group2 stage), run:
 
         docker run -ti --rm \
          -v /data/ds114/sourcedata:/bids_dataset:ro \
