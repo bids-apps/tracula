@@ -18,9 +18,10 @@ parser.add_argument('output_dir', help='The directory where the output files '
                                        'this folder should be prepopulated with the results of the'
                                        'participant level analysis.')
 parser.add_argument('analysis_level', help='Level of the analysis that will be performed. '
-                                           '"participant": reconstructs paths (trac-all -prep, -bedp and -path), '
+                                           '"participant": runs FreeSurfer and reconstructs paths (trac-all -prep, '
+                                           '-bedp and -path), '
                                            '"group1": collects motion stats in one file, '
-                                           '"group2": collects single subject overall path stats in one file.',
+                                           '"group2": collects tract stats in one file.',
                     choices=['participant', 'group1', 'group2'])
 parser.add_argument('--license_key', help='FreeSurfer license key - letters and numbers after "*" in the email '
                                           'you received after registration. To register (for free) visit '
