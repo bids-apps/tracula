@@ -18,8 +18,8 @@ mkdir -p $out_root_dir
 
 if [[ ! -d ${data_dir}/ds114_test1 ]]; then wget -c -O ${data_dir}/ds114_test1.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e54a326c613b01d7d3ed90" && tar xf ${data_dir}/ds114_test1.tar -C ${data_dir}; fi
 if [[ ! -d ${data_dir}/ds114_test2 ]]; then wget -c -O ${data_dir}/ds114_test2.tar "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/57e549f9b83f6901d457d162" && tar xf ${data_dir}/ds114_test2.tar -C ${data_dir}; fi
-if [[ ! -d ${data_dir}/ds114_test1_freesurfer ]]; then wget -c -O ${data_dir}/ds114_test1_freesurfer.tar "https://osf.io/j6zk2/?action=download&version=1" && tar xf ${data_dir}/ds114_test1_freesurfer.tar -C ${data_dir}; fi
-if [[ ! -d ${data_dir}/ds114_test2_freesurfer ]]; then wget -c -O ${data_dir}/ds114_test2_freesurfer.tar "https://osf.io/yhzzj/?action=download&version=1" && tar xf ${data_dir}/ds114_test2_freesurfer.tar -C ${data_dir}; fi
+if [[ ! -d ${data_dir}/ds114_test1_freesurfer_precomp_v6.0.0 ]]; then wget -c -O ${data_dir}/ds114_test1_freesurfer.tar "https://osf.io/j6zk2/?action=download&version=1" && tar xf ${data_dir}/ds114_test1_freesurfer.tar -C ${data_dir}; fi
+if [[ ! -d ${data_dir}/ds114_test2_freesurfer_precomp_v6.0.0 ]]; then wget -c -O ${data_dir}/ds114_test2_freesurfer.tar "https://osf.io/yhzzj/?action=download&version=1" && tar xf ${data_dir}/ds114_test2_freesurfer.tar -C ${data_dir}; fi
 if [[ -e ${data_dir}/*.tar ]]; then rm -r ${data_dir}/*.tar; fi
 
 
