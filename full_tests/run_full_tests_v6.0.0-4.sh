@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # cd /data.nfs/ds114/tracula_full_tests
-# screen -L bash  /data.nfs/ds114/tracula_missing_test/code/tracula/full_tests/run_full_tests_....sh ds114_test1 <suffix optional> and
+# screen -L bash  /data.nfs/ds114/tracula_missing_test/code/tracula/full_tests/run_full_tests_....sh ds114_test1 <suffix optional e.g. _run2> and
 # screen -L bash  /data.nfs/ds114/tracula_missing_test/code/tracula/full_tests/run_full_tests_....sh ds114_test2 <suffix optional>
 
 ds_name=$1
@@ -9,7 +9,7 @@ suf=$2
 echo Running ${ds_name} ${suf}
 
 tracula_version=v6.0.0-4beta
-wd=/data.nfs/ds114/tracula_full_tests/${tracula_version}_${suf}
+wd=/data.nfs/ds114/tracula_full_tests/${tracula_version}${suf}
 
 data_dir=${wd}/data
 out_root_dir=${wd}/out
