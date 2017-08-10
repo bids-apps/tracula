@@ -140,6 +140,13 @@ def run_trac_parallel(stage, jobs_dir, dmrirc_file, n_cpus, job_names=[""], sep=
                     if not os.path.exists(d):
                         os.makedirs(d)
 
+        # fix random seed
+        if job_file.endswith("bedp.txt"):
+            seed_str = " --seed=123"
+            cmd_list = [c + seed_str for c in cmd_list]
+            print(cmd_list)
+
+
         # for prep step: hack parallelization: tracula writes all prep commands (1/session + base) into one jobfile and
         # executes them sequentially; the session steps can be run in parallel, after they are finished, base needs
         # to be run
