@@ -1,6 +1,5 @@
 FROM bids/base_fsl
 
-
 #### FreeSurfer
 RUN apt-get -y update && \
     wget -qO- https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar zxv -C /opt \
@@ -41,17 +40,13 @@ RUN sudo apt-get update && apt-get install -y python3
 RUN sudo apt-get update && apt-get install -y python3-pip
 RUN pip3 install pandas
 RUN pip3 install pybids
+RUN pip3 install nibabel
+RUN pip3 install joblib
 
-RUN apt-get install -y tree htop
-RUN apt-get install -y tcsh
-RUN apt-get install -y bc
-RUN apt-get install -y tar libgomp1 perl-modules
-
-RUN apt-get install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
-RUN apt-get install -y nodejs
-RUN npm install -g bids-validator@0.19.8
-
+RUN sudo apt-get update && apt-get install -y tree htop
+RUN sudo apt-get update && apt-get install -y tcsh
+RUN sudo apt-get update && apt-get install -y bc
+RUN sudo apt-get update && apt-get install -y tar libgomp1 perl-modules
 
 RUN mkdir /scratch
 RUN mkdir /local-scratch
@@ -60,6 +55,14 @@ RUN mkdir -p /code
 COPY run.py /code/run.py
 COPY tracula.py /code/tracula.py
 RUN chmod +x /code/run.py
+
+# freesurfer repo
+RUN wget https://github.com/bids-apps/freesurfer/archive/v6.0.0-5.tar.gz && \
+tar xfz v6.0.0-5.tar.gz && rm -r v6.0.0-5.tar.gz && \
+cd freesurfer-6.0.0-5 && mv run.py /code/run_freesurfer.py
+
+RUN touch /code/version
+ENV PATH=/code:$PATH
 
 COPY version /version
 

@@ -4,7 +4,7 @@ import os
 
 from bids.grabbids import BIDSLayout
 
-from tracula import run_cmd, participant_level, group_level_motion_stats, group_level_tract_overall_stats
+from tracula import run_cmd, participant_level, group_level_motion_stats, group_level_tract_pathstats
 
 __version__ = open('/version').read()
 
@@ -18,9 +18,10 @@ parser.add_argument('output_dir', help='The directory where the output files '
                                        'this folder should be prepopulated with the results of the'
                                        'participant level analysis.')
 parser.add_argument('analysis_level', help='Level of the analysis that will be performed. '
-                                           '"participant": reconstructs paths (trac-all -prep, -bedp and -path), '
+                                           '"participant": runs FreeSurfer and reconstructs paths (trac-all -prep, '
+                                           '-bedp and -path), '
                                            '"group1": collects motion stats in one file, '
-                                           '"group2": collects single subject overall path stats in one file.',
+                                           '"group2": collects tract stats in one file.',
                     choices=['participant', 'group1', 'group2'])
 parser.add_argument('--license_key', help='FreeSurfer license key - letters and numbers after "*" in the email '
                                           'you received after registration. To register (for free) visit '
@@ -38,15 +39,21 @@ parser.add_argument('--session_label',
                          'provided all sessions should be analyzed. Multiple '
                          'sessions can be specified with a space separated list.', nargs="+")
 
-parser.add_argument('--freesurfer_dir', help='The directory with the freesurfer data. If not specified, '
-                                             'output_dir is assumed to be populated with freesurfer data.')
+parser.add_argument('--freesurfer_dir', help='The directory with the FreeSurfer data. If not specified, '
+                                             ' FreeSurfer data is written into output_dir. If FreeSurfer '
+                                             'data cannot be found for a subject, this app will run FreeSurfer as '
+                                             'well.')
 parser.add_argument('--stages', help='Participant-level trac-all stages to run. Passing'
                                      '"all" will run "prep", "bedp" and "path". ',
                     choices=["prep", "bedp", "path", "all"], default=["all"], nargs="+")
+parser.add_argument('--n_cpus', help='Number of CPUs/cores available to use.', default=1, type=int)
+parser.add_argument('--run-freesurfer-tests-only', help='Dev option to enable freesurfer tests on circleci',
+                    dest="run_freesurfer_tests_only", action='store_true', default=False)
 parser.add_argument('-v', '--version', action='version',
                     version='Tracula BIDS-App version {}'.format(__version__))
 
-# parser.add_argument('--n_cpus', help='Number of CPUs/cores available to use.', default=1, type=int)
+
+
 
 args = parser.parse_args()
 
@@ -57,11 +64,6 @@ if not args.freesurfer_dir:
 # check output dir exists or create
 if not os.path.exists(args.output_dir):
     os.makedirs(args.output_dir)
-
-# if not os.path.exists(os.path.join(args.freesurfer_dir, "fsaverage")):
-#     run("cp -rf " + os.path.join(os.environ["SUBJECTS_DIR"], "fsaverage") + " " +
-#         os.path.join(args.freesurfer_dir, "fsaverage"), ignore_errors=True)
-#     # shutil.copytree(os.path.join(os.environ["SUBJECTS_DIR"], "fsaverage"), os.path.join(args.freesurfer_dir, "fsaverage"))
 
 run_cmd("bids-validator " + args.bids_dir)
 
@@ -79,4 +81,4 @@ elif args.analysis_level == "group1":
     group_level_motion_stats(args, subjects_to_analyze)
 
 elif args.analysis_level == "group2":
-    group_level_tract_overall_stats(args, subjects_to_analyze)
+    group_level_tract_pathstats(args, subjects_to_analyze)

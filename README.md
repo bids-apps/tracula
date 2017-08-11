@@ -47,9 +47,13 @@ doi: https://doi.org/10.1101/079145*
 ##
 
 ### Data
-Tracula requires one DWI volume and a Freesurfer reconstruction
+Tracula requires one DWI volume and a one T1w image
 per participant (or session if the data is longitudinal).
-The Freesurfer reconstruction should be performed with the
+
+In a first step, the app will run the FreeSurfer reconstruction
+(`recon-all`). If the Freesurfer reconstruction is already available
+and is provided via the `{freesurfer_dir}` argument, this step is skipped.
+In this case `recon-all` should have been performed with the
 [Freesurfer BIDS App](https://github.com/bids-apps/freesurfer)
 (or at least follow the BIDS naming scheme).
 
@@ -57,7 +61,8 @@ The Freesurfer reconstruction should be performed with the
 
 - **participant**: Tract reconstruction
 
-    Performs the three steps (prep, bedp, path) of Tracula's `trac-all`,
+    Runs `recon-all` if not already available.
+    Subsequently, performs the three steps (prep, bedp, path) of Tracula's `trac-all`,
     reconstructing major fiber tracts form Freesurfer outputs and
     DWI raw data.
     All data is written into `{output_dir}`.
@@ -79,12 +84,13 @@ The Freesurfer reconstruction should be performed with the
     calculation can be found in the *TMI_info* column of the
     output file.
 
-- **group2**: Overall tract statistics
+- **group2**: Tract statistics
 
-    Collects characteristics of a tract (average FA...)
-    for multiple subjects.
-    Output is written to
-    `{output_dir}/00_group2_tract_stats/{tract_name}_stats.tsv`.
+    Collects tract stats for multiple subjects.
+    Mean stats of a tract (average FA...) are written to
+    `{output_dir}/00_group2_tract_stats/overall_stats/`.
+    Along-tract stats are written to
+    `{output_dir}/00_group2_tract_stats/byvoxel_stats/`.
 
 
 ### Usage
@@ -92,8 +98,10 @@ This App has the following command line arguments:
 
     usage: run.py [-h] --license_key LICENSE_KEY
                   [--participant_label PARTICIPANT_LABEL [PARTICIPANT_LABEL ...]]
+                  [--session_label SESSION_LABEL [SESSION_LABEL ...]]
                   [--freesurfer_dir FREESURFER_DIR]
-                  [--stages {prep,bedp,path,all} [{prep,bedp,path,all} ...]] [-v]
+                  [--stages {prep,bedp,path,all} [{prep,bedp,path,all} ...]]
+                  [--n_cpus N_CPUS] [--run-freesurfer-tests-only] [-v]
                   bids_dir output_dir {participant,group1,group2}
 
     BIDS App for Tracula processing stream.
@@ -108,10 +116,10 @@ This App has the following command line arguments:
                             theparticipant level analysis.
       {participant,group1,group2}
                             Level of the analysis that will be performed.
-                            "participant": reconstructs paths (trac-all -prep,
-                            -bedp and -path), "group1": collects motion stats in
-                            one file, "group2": collects single subject overall
-                            path stats in one file.
+                            "participant": runs FreeSurfer and reconstructs paths
+                            (trac-all -prep, -bedp and -path), "group1": collects
+                            motion stats in one file, "group2": collects tract
+                            stats in one file.
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -128,15 +136,26 @@ This App has the following command line arguments:
                             parameter is not provided all subjects should be
                             analyzed. Multiple participants can be specified with
                             a space separated list. (default: None)
+      --session_label SESSION_LABEL [SESSION_LABEL ...]
+                            The label of the sessions that should be analyzed. The
+                            label corresponds to ses-<session_label> from the BIDS
+                            spec (so it does not include "ses-"). If this
+                            parameter is not provided all sessions should be
+                            analyzed. Multiple sessions can be specified with a
+                            space separated list. (default: None)
       --freesurfer_dir FREESURFER_DIR
-                            The directory with the freesurfer data. If not
-                            specified, output_dir is assumed to be populated with
-                            freesurfer data. (default: None)
+                            The directory with the FreeSurfer data. If not
+                            specified, FreeSurfer data is written into output_dir.
+                            If FreeSurfer data cannot be found for a subject, this
+                            app will run FreeSurfer as well. (default: None)
       --stages {prep,bedp,path,all} [{prep,bedp,path,all} ...]
                             Participant-level trac-all stages to run. Passing"all"
                             will run "prep", "bedp" and "path". (default: ['all'])
+      --n_cpus N_CPUS       Number of CPUs/cores available to use. (default: 1)
+      --run-freesurfer-tests-only
+                            Dev option to enable freesurfer tests on circleci
+                            (default: False)
       -v, --version         show program's version number and exit
-
 
 ##
 ### Examples
@@ -175,7 +194,7 @@ To aggregate motion statistics into one file (group1 stage), run:
 
 
 
-To collect single subject overall path stats in one file (group2 stage), run:
+To aggregate tract statistics into one file  (group2 stage), run:
 
         docker run -ti --rm \
          -v /data/ds114/sourcedata:/bids_dataset:ro \
