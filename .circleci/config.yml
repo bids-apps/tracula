@@ -87,7 +87,10 @@ jobs:
             else
               echo "ds114_test2_tracula_precomp was cached"
             fi
-
+      - save_cache:
+         key: data-v1-{{ .Revision }}-{{ epoch }}
+         paths:
+            - /tmp/data
 
 workflows:
   version: 2
