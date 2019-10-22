@@ -1,6 +1,51 @@
-FROM bids/base_fsl
+FROM ubuntu:18.04
+
+RUN apt-get update && apt-get install -y wget gnupg1
+
+#install neurodebian
+RUN wget -O- http://neuro.debian.net/lists/bionic.us-tn.full | tee /etc/apt/sources.list.d/neurodebian.sources.list
+RUN apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 # --refresh-keys
+
+
+## BIDS Validator
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+    apt-get remove -y curl && \
+    apt-get install -y nodejs
+
+RUN npm install -g bids-validator
+
+
+## FSL
+RUN apt-get update && \
+    apt-get install -y wget gnupg1 && \
+    wget -O- http://neuro.debian.net/lists/bionic.us-tn.full | tee /etc/apt/sources.list.d/neurodebian.sources.list && \
+    apt-key adv --refresh-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 && \
+    apt-get update && \
+    apt-get remove -y curl && \
+    apt-get install -y fsl-core=5.0.9-5~nd18.04+1 && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+
+# Configure environment
+ENV FSLDIR=/usr/share/fsl/5.0
+ENV FSLOUTPUTTYPE=NIFTI_GZ
+ENV PATH=/usr/lib/fsl/5.0:$PATH
+ENV FSLMULTIFILEQUIT=TRUE
+ENV POSSUMDIR=/usr/share/fsl/5.0
+ENV LD_LIBRARY_PATH=/usr/lib/fsl/5.0:$LD_LIBRARY_PATH
+ENV FSLTCLSH=/usr/bin/tclsh
+ENV FSLWISH=/usr/bin/wish
+ENV FSLOUTPUTTYPE=NIFTI_GZ
+
+
 
 #### FreeSurfer
+RUN apt-get update && \
+  apt-get install -y tcsh bc tar libgomp1 perl-modules libglu1-mesa
+
+
 RUN apt-get -y update && \
     wget -qO- https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/6.0.0/freesurfer-Linux-centos6_x86_64-stable-pub-v6.0.0.tar.gz | tar zxv -C /opt \
     --exclude='freesurfer/subjects/fsaverage_sym' \
@@ -36,21 +81,17 @@ ENV PATH=/opt/freesurfer/bin:/opt/freesurfer/fsfast/bin:/opt/freesurfer/tktools:
 RUN echo "cHJpbnRmICJrcnp5c3p0b2YuZ29yZ29sZXdza2lAZ21haWwuY29tXG41MTcyXG4gKkN2dW12RVYzelRmZ1xuRlM1Si8yYzFhZ2c0RVxuIiA+IC9vcHQvZnJlZXN1cmZlci9saWNlbnNlLnR4dAo=" | base64 -d | sh
 
 
-RUN sudo apt-get update && apt-get install -y python3
-RUN sudo apt-get update && apt-get install -y python3-pip
+
+RUN apt-get update && apt-get install -y python3
+RUN apt-get update && apt-get install -y python3-pip
 RUN pip3 install pandas
-RUN pip3 install pybids
+RUN pip3 install pybids==0.3 grabbit==0.0.8
 RUN pip3 install nibabel
 RUN pip3 install joblib
 
-RUN sudo apt-get update && apt-get install -y tree htop
-RUN sudo apt-get update && apt-get install -y tcsh
-RUN sudo apt-get update && apt-get install -y bc
-RUN sudo apt-get update && apt-get install -y tar libgomp1 perl-modules
 
-RUN mkdir /scratch
-RUN mkdir /local-scratch
 
+## Tracula and Freesurfer run code
 RUN mkdir -p /code
 COPY run.py /code/run.py
 COPY tracula.py /code/tracula.py
