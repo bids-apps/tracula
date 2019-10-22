@@ -1,11 +1,4 @@
-FROM ubuntu:18.04
-
-RUN apt-get update && apt-get install -y wget gnupg1
-
-#install neurodebian
-RUN wget -O- http://neuro.debian.net/lists/bionic.us-tn.full | tee /etc/apt/sources.list.d/neurodebian.sources.list
-RUN apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 # --refresh-keys
-
+FROM neurodebian:bionic-non-free
 
 ## BIDS Validator
 RUN apt-get update && \
