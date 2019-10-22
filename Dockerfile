@@ -1,11 +1,4 @@
-FROM ubuntu:18.04
-
-RUN apt-get update && apt-get install -y wget gnupg1
-
-#install neurodebian
-RUN wget -O- http://neuro.debian.net/lists/bionic.us-tn.full | tee /etc/apt/sources.list.d/neurodebian.sources.list
-RUN apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 # --refresh-keys
-
+FROM neurodebian:bionic-non-free
 
 ## BIDS Validator
 RUN apt-get update && \
@@ -19,11 +12,6 @@ RUN npm install -g bids-validator
 
 ## FSL
 RUN apt-get update && \
-    apt-get install -y wget gnupg1 && \
-    wget -O- http://neuro.debian.net/lists/bionic.us-tn.full | tee /etc/apt/sources.list.d/neurodebian.sources.list && \
-    apt-key adv --refresh-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 && \
-    apt-get update && \
-    apt-get remove -y curl && \
     apt-get install -y fsl-core=5.0.9-5~nd18.04+1 && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -43,7 +31,7 @@ ENV FSLOUTPUTTYPE=NIFTI_GZ
 
 #### FreeSurfer
 RUN apt-get update && \
-  apt-get install -y tcsh bc tar libgomp1 perl-modules libglu1-mesa
+  apt-get install -y tcsh bc tar libgomp1 perl-modules libglu1-mesa wget
 
 
 RUN apt-get -y update && \
