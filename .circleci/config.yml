@@ -158,7 +158,7 @@ jobs:
           command: docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME}:latest --version
       - run:
           name: Python info
-          command: docker run --rm -ti --entrypoint=/bin/bash bids/${CIRCLE_PROJECT_REPONAME}:latest -c "pip freeze"
+          command: docker run --rm -ti --entrypoint=/bin/bash bids/${CIRCLE_PROJECT_REPONAME}:latest -c "pip3 freeze"
 
   # TEST 1 participant level tests for 1ses dataset: cross dataset that has session level with one session
   test_1ses:
