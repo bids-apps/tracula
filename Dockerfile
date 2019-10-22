@@ -31,7 +31,7 @@ ENV FSLOUTPUTTYPE=NIFTI_GZ
 
 #### FreeSurfer
 RUN apt-get update && \
-  apt-get install -y tcsh bc tar libgomp1 perl-modules libglu1-mesa
+  apt-get install -y tcsh bc tar libgomp1 perl-modules libglu1-mesa wget
 
 
 RUN apt-get -y update && \
