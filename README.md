@@ -1,8 +1,10 @@
-## TRACULA BIDS App
+# TRACULA BIDS App
+
 [![CircleCI](https://circleci.com/gh/BIDS-Apps/tracula.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/BIDS-Apps/tracula)
 [![DOI](https://zenodo.org/badge/77473131.svg)](https://zenodo.org/badge/latestdoi/77473131)
 
-### Description
+## Description
+
 This [BIDS App](https://bids-apps.neuroimaging.io) implements
 [Freesurfer's](https://surfer.nmr.mgh.harvard.edu/)
 [TRACULA ](https://surfer.nmr.mgh.harvard.edu/fswiki/Tracula)
@@ -11,7 +13,8 @@ cross-sectional as well as longitudinal (multi session) input data.
 
 This tool is based on Freesurfer v6.0.0
 
-### Disclaimer
+## Disclaimer
+
 This BIDS-App was tested with [high-angular resolution
 diffusion weighted imaging (DWI) data without
 fieldmaps](https://openfmri.org/dataset/ds000114/).
@@ -19,16 +22,16 @@ If you would like to see it working with more complex data,
 [get in touch](https://github.com/bids-apps/tracula/issues).
 
 
-### How to report errors
+## How to report errors
+
 For Tracula-BIDS-Apps related problems, open an
 [issue](https://github.com/bids-apps/tracula/issues).
 
 For Tracula-relade errors contact the
 [Freesurfer mailing list](https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferSupport).
 
+## Acknowledgements
 
-
-### Acknowledgements
 If you use this tool please cite the following sources:
 
 - *Franziskus Liem, & Krzysztof J. Gorgolewski. (2017).
@@ -44,9 +47,8 @@ doi: https://doi.org/10.1101/079145*
 - The relevant Freesurfer
 [references](https://surfer.nmr.mgh.harvard.edu/fswiki/FreeSurferMethodsCitation).
 
-##
+## Data
 
-### Data
 Tracula requires one DWI volume and a one T1w image
 per participant (or session if the data is longitudinal).
 
@@ -57,7 +59,7 @@ In this case `recon-all` should have been performed with the
 [Freesurfer BIDS App](https://github.com/bids-apps/freesurfer)
 (or at least follow the BIDS naming scheme).
 
-### Analysis levels
+## Analysis levels
 
 - **participant**: Tract reconstruction
 
@@ -93,7 +95,8 @@ In this case `recon-all` should have been performed with the
     `{output_dir}/00_group2_tract_stats/byvoxel_stats/`.
 
 
-### Usage
+## Usage
+
 This App has the following command line arguments:
 
     usage: run.py [-h] --license_key LICENSE_KEY
@@ -157,10 +160,12 @@ This App has the following command line arguments:
                             (default: False)
       -v, --version         show program's version number and exit
 
-##
-### Examples
+
+## Examples
+
 To run it in participant level mode (for one participant):
-#### Participant level
+
+### Participant level
 
         docker run -ti --rm \
          -v /data/ds114/sourcedata:/bids_dataset:ro \
@@ -176,7 +181,7 @@ mount point inside the docker container (e.g., `/freesurfer`, specified
 in the 4th line of the previous command, after the ":"), not the
 path on your hard drive (e.g., `/data/ds114/derivates/freesurfer`)
 
-#### Group level
+### Group level
 
 After doing this for all subjects (potentially in parallel) the group level analysis
 can be run.
