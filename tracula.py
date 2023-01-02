@@ -479,6 +479,3 @@ def group_level_tract_pathstats(args, subjects_to_analyze):
     stats_source_folder = os.path.join(args.output_dir, "stats")
     stats_dest_folder = os.path.join(group_output_dir, "byvoxel_stats")
     shutil.move(stats_source_folder, stats_dest_folder)
-
-
-
