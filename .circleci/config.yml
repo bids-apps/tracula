@@ -94,8 +94,8 @@ jobs:
         - /tmp/data
 
   build:
-    docker:
-    - image: docker:18.01.0-ce-git
+    machine:
+      image: ubuntu-2204:2022.10.2
     steps:
     - checkout
     - run:
@@ -108,8 +108,6 @@ jobs:
         - docker-v1-{{ .Branch }}-
         - docker-v1-master-
         - docker-v1-
-        paths:
-        - /tmp/cache/docker.tar.gz
 
     - run:
         name: Load Docker image layer cache
@@ -179,8 +177,7 @@ jobs:
         - docker-v1-{{ .Branch }}-
         - docker-v1-master-
         - docker-v1-
-        paths:
-        - /tmp/cache/docker.tar.gz
+
     - restore_cache:
         keys:
         - data-v1-{{ .Revision }}
@@ -214,7 +211,7 @@ jobs:
   # TEST 2 tests for ds114_test1
   test_ds114_test1:
     machine:
-      image: circleci/classic:201711-01
+      image: ubuntu-2204:2022.10.2
     working_directory: /tmp/data
     environment:
     - DATADIR: /tmp/data
@@ -230,13 +227,12 @@ jobs:
         - docker-v1-{{ .Branch }}-
         - docker-v1-master-
         - docker-v1-
-        paths:
-        - /tmp/cache/docker.tar.gz
+
     - restore_cache:
         keys:
         - data-v1-{{ .Revision }}
         - data-v1-
-        # Load Docker
+
     - run:
         name: Load Docker
         no_output_timeout: 30m
@@ -292,7 +288,7 @@ jobs:
   # TEST 3 tests for ds114_test2
   test_ds114_test2:
     machine:
-      image: circleci/classic:201711-01
+      image: ubuntu-2204:2022.10.2
     working_directory: /tmp/data
     environment:
     - DATADIR: /tmp/data
@@ -308,13 +304,12 @@ jobs:
         - docker-v1-{{ .Branch }}-
         - docker-v1-master-
         - docker-v1-
-        paths:
-        - /tmp/cache/docker.tar.gz
+
     - restore_cache:
         keys:
         - data-v1-{{ .Revision }}
         - data-v1-
-        # Load Docker
+
     - run:
         name: Load Docker
         no_output_timeout: 30m
@@ -370,7 +365,7 @@ jobs:
   # TEST 4 tests session flag
   test_session:
     machine:
-      image: circleci/classic:201711-01
+      image: ubuntu-2204:2022.10.2
     working_directory: /tmp/data
     environment:
     - DATADIR: /tmp/data
@@ -386,13 +381,12 @@ jobs:
         - docker-v1-{{ .Branch }}-
         - docker-v1-master-
         - docker-v1-
-        paths:
-        - /tmp/cache/docker.tar.gz
+
     - restore_cache:
         keys:
         - data-v1-{{ .Revision }}
         - data-v1-
-        # Load Docker
+
     - run:
         name: Load Docker
         no_output_timeout: 30m
@@ -423,7 +417,7 @@ jobs:
   # TEST 5 freesurfer
   test_freesurfer:
     machine:
-      image: circleci/classic:201711-01
+      image: ubuntu-2204:2022.10.2
     working_directory: /tmp/data
     environment:
     - DATADIR: /tmp/data
@@ -439,13 +433,12 @@ jobs:
         - docker-v1-{{ .Branch }}-
         - docker-v1-master-
         - docker-v1-
-        paths:
-        - /tmp/cache/docker.tar.gz
+
     - restore_cache:
         keys:
         - data-v1-{{ .Revision }}
         - data-v1-
-        # Load Docker
+
     - run:
         name: Load Docker
         no_output_timeout: 30m
@@ -477,7 +470,7 @@ jobs:
 
   deploy:
     machine:
-      image: circleci/classic:201711-01
+      image: ubuntu-2204:2022.10.2
     steps:
     - run:
         name: Install parallel gzip
