@@ -1,14 +1,16 @@
 FROM neurodebian:bionic-non-free
 
 ## BIDS Validator
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -q -y curl && \
-    curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
-    apt-get remove -y curl && \
-    apt-get install -y nodejs && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN npm install -g bids-validator
+RUN apt-get update -qq \
+           && apt-get install -y -q --no-install-recommends \
+                  ca-certificates curl apt-utils \
+           && rm -rf /var/lib/apt/lists/*
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
+RUN apt-get update -qq \
+           && apt-get install -y -q --no-install-recommends \
+                  nodejs \
+           && rm -rf /var/lib/apt/lists/*
+RUN node --version && npm --version && npm install -g bids-validator@1.9.9
 
 
 ## FSL
