@@ -1,18 +1,19 @@
 FROM neurodebian:bionic-non-free
 
 ## BIDS Validator
-RUN apt-get update && \
-    apt-get install -y curl && \
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -q -y curl && \
     curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
     apt-get remove -y curl && \
-    apt-get install -y nodejs
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g bids-validator
 
 
 ## FSL
-RUN apt-get update && \
-    apt-get install -y fsl-core=5.0.9-5~nd18.04+1 && \
+RUN apt-get update -qq && \
+    apt-get install -q -y --no-install-recommends  fsl-core=5.0.9-5~nd18.04+1 && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
@@ -30,8 +31,15 @@ ENV FSLOUTPUTTYPE=NIFTI_GZ
 
 
 #### FreeSurfer
-RUN apt-get update && \
-  apt-get install -y tcsh bc tar libgomp1 perl-modules libglu1-mesa wget
+RUN apt-get update -qq && \
+  apt-get install -q -y --no-install-recommends \
+                tcsh \
+                bc \
+                tar \
+                libgomp1 \
+                perl-modules \
+                libglu1-mesa wget && \
+    rm -rf /var/lib/apt/lists/*
 
 
 RUN apt-get -y update && \
@@ -70,12 +78,16 @@ RUN echo "cHJpbnRmICJrcnp5c3p0b2YuZ29yZ29sZXdza2lAZ21haWwuY29tXG41MTcyXG4gKkN2dW
 
 
 
-RUN apt-get update && apt-get install -y python3
-RUN apt-get update && apt-get install -y python3-pip
-RUN pip3 install pandas
-RUN pip3 install pybids==0.3 grabbit==0.0.8
-RUN pip3 install nibabel
-RUN pip3 install joblib
+RUN apt-get update -qq && \
+    apt-get install -q -y --no-install-recommends \
+                python3 \
+                python3-pip && \
+    rm -rf /var/lib/apt/lists/* && \
+    pip3 install \
+    pandas \
+    pybids \
+    nibabel \
+    joblib
 
 
 
@@ -86,9 +98,11 @@ COPY tracula.py /code/tracula.py
 RUN chmod +x /code/run.py
 
 # freesurfer repo
-RUN wget https://github.com/bids-apps/freesurfer/archive/v6.0.0-5.tar.gz && \
-tar xfz v6.0.0-5.tar.gz && rm -r v6.0.0-5.tar.gz && \
-cd freesurfer-6.0.0-5 && mv run.py /code/run_freesurfer.py
+RUN wget --progress=dot:giga https://github.com/bids-apps/freesurfer/archive/v6.0.0-5.tar.gz && \
+    tar xfz v6.0.0-5.tar.gz && \
+    rm -r v6.0.0-5.tar.gz && \
+    cd freesurfer-6.0.0-5 && \
+    mv run.py /code/run_freesurfer.py
 
 RUN touch /code/version
 ENV PATH=/code:$PATH

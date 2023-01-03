@@ -2,7 +2,7 @@
 import argparse
 import os
 
-from bids.grabbids import BIDSLayout
+from bids import BIDSLayout
 
 from tracula import run_cmd, participant_level, group_level_motion_stats, group_level_tract_pathstats
 
