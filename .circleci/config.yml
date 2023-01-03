@@ -94,14 +94,14 @@ jobs:
         - /tmp/data
 
   build:
-    machine:
-      image: ubuntu-2204:2022.10.2
+    docker:
+    - image: cimg/base:2021.04
     steps:
     - checkout
     - run:
         name: Install parallel gzip
         command: |
-          apt-get install -y -q pigz
+          apk add --no-cache pigz
     - restore_cache:
         keys:
         - docker-v1-{{ .Branch }}-{{ .Revision }}
