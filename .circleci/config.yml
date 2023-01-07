@@ -130,7 +130,8 @@ jobs:
           key: docker-v1-{{ .Branch }}-{{ epoch }}
           paths:
             - /tmp/cache/docker.tar.gz
-          # Usage and version
+
+      # Usage and version
       - run:
           name: Usage
           command: docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME}:latest -h
@@ -149,9 +150,6 @@ jobs:
     machine:
       image: ubuntu-2204:2022.10.2
     working_directory: /tmp/data
-    environment:
-      - DATADIR: /tmp/data
-      - OUTDIR: /tmp/outputs
     steps:
       - run:
           name: Install parallel gzip
@@ -208,9 +206,6 @@ jobs:
       dataset:
         type: string
 
-    environment:
-      - DATADIR: /tmp/data
-      - OUTDIR: /tmp/outputs
     steps:
       - run:
           name: Install parallel gzip
@@ -297,9 +292,6 @@ jobs:
     machine:
       image: ubuntu-2204:2022.10.2
     working_directory: /tmp/data
-    environment:
-      - DATADIR: /tmp/data
-      - OUTDIR: /tmp/outputs
     steps:
       - run:
           name: Install parallel gzip
@@ -354,9 +346,6 @@ jobs:
     machine:
       image: ubuntu-2204:2022.10.2
     working_directory: /tmp/data
-    environment:
-      - DATADIR: /tmp/data
-      - OUTDIR: /tmp/outputs
     steps:
       - run:
           name: Install parallel gzip
@@ -422,8 +411,6 @@ jobs:
             - docker-v1-{{ .Branch }}-
             - docker-v1-master-
             - docker-v1-
-          paths:
-            - /tmp/cache/docker.tar.gz
 
           # Load Docker
       - run:
