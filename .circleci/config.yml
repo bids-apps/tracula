@@ -6,144 +6,141 @@ jobs:
       image: ubuntu-2204:2022.10.2
     working_directory: /tmp/data
     steps:
-      - restore_cache:
-          keys:
-            - data-v1-{{ .Revision }}
-            - data-v1-
-      - run:
-          name: Get test data
-          command: |
-            wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/utils/get_data_from_osf.sh
-            bash get_data_from_osf.sh ds114_test1
-            bash get_data_from_osf.sh ds114_test2
-      - run:
-          name: Create ds114_test2_1ses
-          command: |
-            if [[ ! -d /tmp/data/ds114_test2_1ses ]]; then
-              cp -r /tmp/data/ds114_test2 /tmp/data/ds114_test2_1ses && \
-              rm -r /tmp/data/ds114_test2_1ses/sub-*/ses-retest
-            else
-              echo "ds114_test2_1ses was cached"
-            fi
-      - run:
-          name: Get ds114_test1_freesurfer
-          command: |
-            if [[ ! -d /tmp/data/ds114_test1_freesurfer ]]; then
-              wget -c -O ~/ds114_test1_freesurfer.tar \
-              "https://osf.io/j6zk2/?action=download&version=1" && \
-              tar xf ~/ds114_test1_freesurfer.tar -C /tmp/data && \
-              mv /tmp/data/ds114_test1_freesurfer_precomp_v6.0.0 /tmp/data/ds114_test1_freesurfer && \
-              rm ~/ds114_test1_freesurfer.tar;
-            else
-              echo "ds114_test1_freesurfer was cached"
-            fi
-      - run:
-          name: Get ds114_test2_freesurfer
-          command: |
-            if [[ ! -d /tmp/data/ds114_test2_freesurfer ]]; then
-              wget -c -O ~/ds114_test2_freesurfer.tar \
-              "https://osf.io/yhzzj/?action=download&version=1" && \
-              tar xf ~/ds114_test2_freesurfer.tar -C /tmp/data && \
-              mv /tmp/data/ds114_test2_freesurfer_precomp_v6.0.0 /tmp/data/ds114_test2_freesurfer && \
-              rm ~/ds114_test2_freesurfer.tar;
-            else
-              echo "ds114_test2_freesurfer was cached"
-            fi
-      - run:
-          name: Get ds114_test1_tracula_precomp
-          command: |
-            if [[ ! -d /tmp/data/ds114_test1_tracula_precomp ]]; then
-              wget -c -O ~/ds114_test1_tracula_precomp.tar \
-              "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882af28594d9001f447f03a" && \
-              tar xf ~/ds114_test1_tracula_precomp.tar -C /tmp/data && \
-              rm ~/ds114_test1_tracula_precomp.tar;
-            else
-              echo "ds114_test1_tracula_precomp was cached"
-            fi
-      - run:
-          name: Get ds114_test2_tracula_precomp
-          command: |
-            if [[ ! -d /tmp/data/ds114_test2_tracula_precomp ]]; then
-              wget -c -O ~/ds114_test2_tracula_precomp.tar \
-              "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882b3c3594d9001f047f031" && \
-              tar xf ~/ds114_test2_tracula_precomp.tar -C /tmp/data && \
-              rm ~/ds114_test2_tracula_precomp.tar;
-            else
-              echo "ds114_test2_tracula_precomp was cached"
-            fi
-      - save_cache:
-          key: data-v1-{{ .Revision }}-{{ epoch }}
-          paths:
-            - /tmp/data
+    - restore_cache:
+        keys:
+        - data-v1-{{ .Revision }}
+        - data-v1-
+    - run:
+        name: Get test data
+        command: |
+          wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/utils/get_data_from_osf.sh
+          bash get_data_from_osf.sh ds114_test1
+          bash get_data_from_osf.sh ds114_test2
+    - run:
+        name: Create ds114_test2_1ses
+        command: |
+          if [[ ! -d /tmp/data/ds114_test2_1ses ]]; then
+            cp -r /tmp/data/ds114_test2 /tmp/data/ds114_test2_1ses && \
+            rm -r /tmp/data/ds114_test2_1ses/sub-*/ses-retest
+          else
+            echo "ds114_test2_1ses was cached"
+          fi
+    - run:
+        name: Get ds114_test1_freesurfer
+        command: |
+          if [[ ! -d /tmp/data/ds114_test1_freesurfer ]]; then
+            wget -c -O ~/ds114_test1_freesurfer.tar \
+            "https://osf.io/j6zk2/?action=download&version=1" && \
+            tar xf ~/ds114_test1_freesurfer.tar -C /tmp/data && \
+            mv /tmp/data/ds114_test1_freesurfer_precomp_v6.0.0 /tmp/data/ds114_test1_freesurfer && \
+            rm ~/ds114_test1_freesurfer.tar;
+          else
+            echo "ds114_test1_freesurfer was cached"
+          fi
+    - run:
+        name: Get ds114_test2_freesurfer
+        command: |
+          if [[ ! -d /tmp/data/ds114_test2_freesurfer ]]; then
+            wget -c -O ~/ds114_test2_freesurfer.tar \
+            "https://osf.io/yhzzj/?action=download&version=1" && \
+            tar xf ~/ds114_test2_freesurfer.tar -C /tmp/data && \
+            mv /tmp/data/ds114_test2_freesurfer_precomp_v6.0.0 /tmp/data/ds114_test2_freesurfer && \
+            rm ~/ds114_test2_freesurfer.tar;
+          else
+            echo "ds114_test2_freesurfer was cached"
+          fi
+    - run:
+        name: Get ds114_test1_tracula_precomp
+        command: |
+          if [[ ! -d /tmp/data/ds114_test1_tracula_precomp ]]; then
+            wget -c -O ~/ds114_test1_tracula_precomp.tar \
+            "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882af28594d9001f447f03a" && \
+            tar xf ~/ds114_test1_tracula_precomp.tar -C /tmp/data && \
+            rm ~/ds114_test1_tracula_precomp.tar;
+          else
+            echo "ds114_test1_tracula_precomp was cached"
+          fi
+    - run:
+        name: Get ds114_test2_tracula_precomp
+        command: |
+          if [[ ! -d /tmp/data/ds114_test2_tracula_precomp ]]; then
+            wget -c -O ~/ds114_test2_tracula_precomp.tar \
+            "https://files.osf.io/v1/resources/9q7dv/providers/osfstorage/5882b3c3594d9001f047f031" && \
+            tar xf ~/ds114_test2_tracula_precomp.tar -C /tmp/data && \
+            rm ~/ds114_test2_tracula_precomp.tar;
+          else
+            echo "ds114_test2_tracula_precomp was cached"
+          fi
+    - save_cache:
+        key: data-v1-{{ .Revision }}-{{ epoch }}
+        paths:
+        - /tmp/data
 
   build:
     machine:
       image: ubuntu-2204:2022.10.2
     steps:
-      - checkout
-      - run:
-          name: Install parallel gzip
-          command: |
-            sudo apt-get update && sudo apt-get install -y pigz
-      - restore_cache:
-          keys:
-            - docker-v1-{{ .Branch }}-{{ .Revision }}
-            - docker-v1-{{ .Branch }}-
-            - docker-v1-master-
-            - docker-v1-
+    - checkout
+    - run:
+        name: Install parallel gzip
+        command: |
+          sudo apt-get update && sudo apt-get install -y pigz
+    - restore_cache:
+        keys:
+        - docker-v1-{{ .Branch }}-{{ .Revision }}
+        - docker-v1-{{ .Branch }}-
+        - docker-v1-master-
+        - docker-v1-
 
-      - run:
-          name: Load Docker image layer cache
-          no_output_timeout: 30m
-          command: |
-            docker info
-            set +o pipefail
-            if [ -f /tmp/cache/docker.tar.gz ]; then
-              pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
-            else
-              echo "No docker cache found"
-            fi
-            docker images
-      - run:
-          name: get version
-          command: |
-            git describe --tags --always > version
-            cat version
-      - run:
-          name: Build Docker image
-          no_output_timeout: 60m
-          command: |
-            docker images
-            set +o pipefail
-            docker build --cache-from=bids/${CIRCLE_PROJECT_REPONAME} \
-            -t bids/${CIRCLE_PROJECT_REPONAME}:latest .
-            docker images
-      - run:
-          name: Docker save
-          no_output_timeout: 40m
-          command: |
-            mkdir -p /tmp/cache
-            set +o pipefail
-            docker save bids/${CIRCLE_PROJECT_REPONAME}:latest \
-              | pigz -2 -p 3 > /tmp/cache/docker.tar.gz
-      - save_cache:
-          key: docker-v1-{{ .Branch }}-{{ epoch }}
-          paths:
-            - /tmp/cache/docker.tar.gz
+    - run:
+        name: Load Docker image layer cache
+        no_output_timeout: 30m
+        command: |
+          docker info
+          set +o pipefail
+          if [ -f /tmp/cache/docker.tar.gz ]; then
+            pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
+          else
+            echo "No docker cache found"
+          fi
+          docker images
+    - run:
+        name: get version
+        command: |
+          git describe --tags --always > version
+          cat version
+    - run:
+        name: Build Docker image
+        no_output_timeout: 60m
+        command: |
+          docker images
+          set +o pipefail
+          docker build --cache-from=bids/${CIRCLE_PROJECT_REPONAME} \
+          -t bids/${CIRCLE_PROJECT_REPONAME}:latest .
+          docker images
+    - run:
+        name: Docker save
+        no_output_timeout: 40m
+        command: |
+          mkdir -p /tmp/cache
+          set +o pipefail
+          docker save bids/${CIRCLE_PROJECT_REPONAME}:latest \
+            | pigz -2 -p 3 > /tmp/cache/docker.tar.gz
+    - save_cache:
+        key: docker-v1-{{ .Branch }}-{{ epoch }}
+        paths:
+        - /tmp/cache/docker.tar.gz
 
       # Usage and version
-      - run:
-          name: Usage
-          command: docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME}:latest -h
-      - run:
-          name: Version
-          command:
-            docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME}:latest --version
-      - run:
-          name: Python info
-          command:
-            docker run --rm -ti --entrypoint=/bin/bash
-            bids/${CIRCLE_PROJECT_REPONAME}:latest -c "pip3 freeze"
+    - run:
+        name: Usage
+        command: docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME}:latest -h
+    - run:
+        name: Version
+        command: docker run -ti --rm bids/${CIRCLE_PROJECT_REPONAME}:latest --version
+    - run:
+        name: Python info
+        command: docker run --rm -ti --entrypoint=/bin/bash bids/${CIRCLE_PROJECT_REPONAME}:latest -c "pip3 freeze"
 
   # TEST 1 participant level tests for 1ses dataset: cross dataset that has session level with one session
   test_1ses:
@@ -151,50 +148,50 @@ jobs:
       image: ubuntu-2204:2022.10.2
     working_directory: /tmp/data
     steps:
-      - run:
-          name: Install parallel gzip
-          command: |
-            sudo apt-get update && sudo apt-get install -y pigz
-      - restore_cache:
-          keys:
-            - docker-v1-{{ .Branch }}-{{ .Revision }}
-            - docker-v1-{{ .Branch }}-
-            - docker-v1-master-
-            - docker-v1-
+    - run:
+        name: Install parallel gzip
+        command: |
+          sudo apt-get update && sudo apt-get install -y pigz
+    - restore_cache:
+        keys:
+        - docker-v1-{{ .Branch }}-{{ .Revision }}
+        - docker-v1-{{ .Branch }}-
+        - docker-v1-master-
+        - docker-v1-
 
-      - restore_cache:
-          keys:
-            - data-v1-{{ .Revision }}
-            - data-v1-
+    - restore_cache:
+        keys:
+        - data-v1-{{ .Revision }}
+        - data-v1-
           # Load Docker
-      - run:
-          name: Load Docker
-          no_output_timeout: 30m
-          command: |
-            docker info
-            set +o pipefail
-            pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
-            docker images
-      - run:
-          name: make output directory
-          command: mkdir -p ${OUTDIR}
-      - run:
-          name: Test 1ses participant
-          command: |
-            docker run -ti --rm \
-            -v ${DATADIR}/ds114_test2_1ses:/bids_dataset \
-            -v ${OUTDIR}/outputs2_1ses:/outputs \
-            -v ${DATADIR}/ds114_test1_freesurfer:/freesurfer \
-              bids/${CIRCLE_PROJECT_REPONAME}:latest \
-                /bids_dataset /outputs participant \
-                --participant_label 01 \
-                --license_key="~/test.key" \
-                --freesurfer_dir /freesurfer \
-                --stages prep
+    - run:
+        name: Load Docker
+        no_output_timeout: 30m
+        command: |
+          docker info
+          set +o pipefail
+          pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
+          docker images
+    - run:
+        name: make output directory
+        command: mkdir -p ${OUTDIR}
+    - run:
+        name: Test 1ses participant
+        command: |
+          docker run -ti --rm \
+          -v ${DATADIR}/ds114_test2_1ses:/bids_dataset \
+          -v ${OUTDIR}/outputs2_1ses:/outputs \
+          -v ${DATADIR}/ds114_test1_freesurfer:/freesurfer \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /bids_dataset /outputs participant \
+              --participant_label 01 \
+              --license_key="~/test.key" \
+              --freesurfer_dir /freesurfer \
+              --stages prep
 
-            cat ${OUTDIR}/outputs2_1ses/sub-01/scripts/trac-preproc.done
-      - store_artifacts:
-          path: /tmp/outputs/
+          cat ${OUTDIR}/outputs2_1ses/sub-01/scripts/trac-preproc.done
+    - store_artifacts:
+        path: /tmp/outputs/
 
   # TEST 2 tests for ds114_test1 and ds114_test2
   test_ds114_test:
@@ -207,85 +204,85 @@ jobs:
         type: string
 
     steps:
-      - run:
-          name: Install parallel gzip
-          command: |
-            sudo apt-get update && sudo apt-get install -y pigz
-      - restore_cache:
-          keys:
-            - docker-v1-{{ .Branch }}-{{ .Revision }}
-            - docker-v1-{{ .Branch }}-
-            - docker-v1-master-
-            - docker-v1-
+    - run:
+        name: Install parallel gzip
+        command: |
+          sudo apt-get update && sudo apt-get install -y pigz
+    - restore_cache:
+        keys:
+        - docker-v1-{{ .Branch }}-{{ .Revision }}
+        - docker-v1-{{ .Branch }}-
+        - docker-v1-master-
+        - docker-v1-
 
-      - restore_cache:
-          keys:
-            - data-v1-{{ .Revision }}
-            - data-v1-
+    - restore_cache:
+        keys:
+        - data-v1-{{ .Revision }}
+        - data-v1-
 
-      - run:
-          name: Load Docker
-          no_output_timeout: 30m
-          command: |
-            docker info
-            set +o pipefail
-            pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
-            docker images
-      - run:
-          name: make output directory
-          command: mkdir -p << parameters.dataset >>
-      - run:
-          name: participant level tests for single session dataset
-          command: |
-            docker run -ti --rm \
-            -v ${DATADIR}/ds114_test<< parameters.dataset >>:/bids_dataset \
-            -v ${OUTDIR}/outputs<< parameters.dataset >>:/outputs \
-            -v ${DATADIR}/ds114_test<< parameters.dataset >>_freesurfer:/freesurfer \
-              bids/${CIRCLE_PROJECT_REPONAME}:latest \
-              /bids_dataset /outputs participant \
-              --participant_label 01 \
+    - run:
+        name: Load Docker
+        no_output_timeout: 30m
+        command: |
+          docker info
+          set +o pipefail
+          pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
+          docker images
+    - run:
+        name: make output directory
+        command: mkdir -p << parameters.dataset >>
+    - run:
+        name: participant level tests for single session dataset
+        command: |
+          docker run -ti --rm \
+          -v ${DATADIR}/ds114_test<< parameters.dataset >>:/bids_dataset \
+          -v ${OUTDIR}/outputs<< parameters.dataset >>:/outputs \
+          -v ${DATADIR}/ds114_test<< parameters.dataset >>_freesurfer:/freesurfer \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+            /bids_dataset /outputs participant \
+            --participant_label 01 \
+            --license_key="~/test.key" \
+            --freesurfer_dir /freesurfer \
+            --stages prep
+
+          cat ${OUTDIR}/outputs<< parameters.dataset >>/sub-01/scripts/trac-preproc.done
+    - run:
+        name: group1 level tests for single session dataset
+        command: |
+          docker run -ti --rm \
+          -v ${DATADIR}/ds114_test<< parameters.dataset >>:/bids_dataset \
+          -v ${DATADIR}/ds114_test<< parameters.dataset >>_tracula_precomp:/outputs \
+          -v ${DATADIR}/ds114_test<< parameters.dataset >>_freesurfer:/freesurfer \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /bids_dataset \
+              /outputs group1 \
               --license_key="~/test.key" \
-              --freesurfer_dir /freesurfer \
-              --stages prep
+              --freesurfer_dir /freesurfer
 
-            cat ${OUTDIR}/outputs<< parameters.dataset >>/sub-01/scripts/trac-preproc.done
-      - run:
-          name: group1 level tests for single session dataset
-          command: |
-            docker run -ti --rm \
-            -v ${DATADIR}/ds114_test<< parameters.dataset >>:/bids_dataset \
-            -v ${DATADIR}/ds114_test<< parameters.dataset >>_tracula_precomp:/outputs \
-            -v ${DATADIR}/ds114_test<< parameters.dataset >>_freesurfer:/freesurfer \
-              bids/${CIRCLE_PROJECT_REPONAME}:latest \
-                /bids_dataset \
-                /outputs group1 \
-                --license_key="~/test.key" \
-                --freesurfer_dir /freesurfer
-            
-            mkdir -p ${OUTDIR}/outputs<< parameters.dataset >>
-            sudo mv ${DATADIR}/ds114_test<< parameters.dataset >>_tracula_precomp/00_group* \
-                    ${OUTDIR}/outputs<< parameters.dataset >>/
-            cat ${OUTDIR}/outputs<< parameters.dataset >>/00_group1_motion_stats/group_motion.tsv
-      - run:
-          name: group2 level tests for single session dataset
-          command: |
-            docker run -ti --rm \
-            -v ${DATADIR}/ds114_test<< parameters.dataset >>:/bids_dataset \
-            -v ${DATADIR}/ds114_test<< parameters.dataset >>_tracula_precomp:/outputs \
-            -v ${DATADIR}/ds114_test<< parameters.dataset >>_freesurfer:/freesurfer \
-              bids/${CIRCLE_PROJECT_REPONAME}:latest \
-                /bids_dataset \
-                /outputs \
-                group2 \
-                --license_key="~/test.key" \
-                --freesurfer_dir /freesurfer
-            
-            sudo mv ${DATADIR}/ds114_test<< parameters.dataset >>_tracula_precomp/00_group* \
-                    ${OUTDIR}/outputs<< parameters.dataset >>/
-            cat ${OUTDIR}/outputs<< parameters.dataset >>/00_group2_tract_stats/overall_stats/fminor_stats.tsv
-            cat ${OUTDIR}/outputs<< parameters.dataset >>/00_group2_tract_stats/byvoxel_stats/lh.cab_PP.avg33_mni_bbr.FA.txt
-      - store_artifacts:
-          path: /tmp/outputs/
+          mkdir -p ${OUTDIR}/outputs<< parameters.dataset >>
+          sudo mv ${DATADIR}/ds114_test<< parameters.dataset >>_tracula_precomp/00_group* \
+                  ${OUTDIR}/outputs<< parameters.dataset >>/
+          cat ${OUTDIR}/outputs<< parameters.dataset >>/00_group1_motion_stats/group_motion.tsv
+    - run:
+        name: group2 level tests for single session dataset
+        command: |
+          docker run -ti --rm \
+          -v ${DATADIR}/ds114_test<< parameters.dataset >>:/bids_dataset \
+          -v ${DATADIR}/ds114_test<< parameters.dataset >>_tracula_precomp:/outputs \
+          -v ${DATADIR}/ds114_test<< parameters.dataset >>_freesurfer:/freesurfer \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /bids_dataset \
+              /outputs \
+              group2 \
+              --license_key="~/test.key" \
+              --freesurfer_dir /freesurfer
+
+          sudo mv ${DATADIR}/ds114_test<< parameters.dataset >>_tracula_precomp/00_group* \
+                  ${OUTDIR}/outputs<< parameters.dataset >>/
+          cat ${OUTDIR}/outputs<< parameters.dataset >>/00_group2_tract_stats/overall_stats/fminor_stats.tsv
+          cat ${OUTDIR}/outputs<< parameters.dataset >>/00_group2_tract_stats/byvoxel_stats/lh.cab_PP.avg33_mni_bbr.FA.txt
+    - store_artifacts:
+        path: /tmp/outputs/
 
   # TEST 3 tests session flag
   test_session:
@@ -293,53 +290,53 @@ jobs:
       image: ubuntu-2204:2022.10.2
     working_directory: /tmp/data
     steps:
-      - run:
-          name: Install parallel gzip
-          command: |
-            sudo apt-get update && sudo apt-get install -y pigz
-      - restore_cache:
-          keys:
-            - docker-v1-{{ .Branch }}-{{ .Revision }}
-            - docker-v1-{{ .Branch }}-
-            - docker-v1-master-
-            - docker-v1-
+    - run:
+        name: Install parallel gzip
+        command: |
+          sudo apt-get update && sudo apt-get install -y pigz
+    - restore_cache:
+        keys:
+        - docker-v1-{{ .Branch }}-{{ .Revision }}
+        - docker-v1-{{ .Branch }}-
+        - docker-v1-master-
+        - docker-v1-
 
-      - restore_cache:
-          keys:
-            - data-v1-{{ .Revision }}
-            - data-v1-
+    - restore_cache:
+        keys:
+        - data-v1-{{ .Revision }}
+        - data-v1-
 
-      - run:
-          name: Load Docker
-          no_output_timeout: 30m
-          command: |
-            docker info
-            set +o pipefail
-            pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
-            docker images
-      - run:
-          name: make output directory
-          command: mkdir -p ${OUTDIR}
-      - run:
-          name: participant level tests for sesseion flag in ds114_test2
-          command: |
-            docker run -ti --rm \
-            -v ${DATADIR}/ds114_test2:/bids_dataset \
-            -v ${OUTDIR}/outputs2_session_label:/outputs \
-            -v ${DATADIR}/ds114_test2_freesurfer:/freesurfer \
-              bids/${CIRCLE_PROJECT_REPONAME}:latest \
-                /bids_dataset \
-                /outputs \
-                participant \
-                --participant_label 01 \
-                --session_label retest \
-                --license_key="~/test.key" \
-                --freesurfer_dir /freesurfer \
-                --stages prep
+    - run:
+        name: Load Docker
+        no_output_timeout: 30m
+        command: |
+          docker info
+          set +o pipefail
+          pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
+          docker images
+    - run:
+        name: make output directory
+        command: mkdir -p ${OUTDIR}
+    - run:
+        name: participant level tests for sesseion flag in ds114_test2
+        command: |
+          docker run -ti --rm \
+          -v ${DATADIR}/ds114_test2:/bids_dataset \
+          -v ${OUTDIR}/outputs2_session_label:/outputs \
+          -v ${DATADIR}/ds114_test2_freesurfer:/freesurfer \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /bids_dataset \
+              /outputs \
+              participant \
+              --participant_label 01 \
+              --session_label retest \
+              --license_key="~/test.key" \
+              --freesurfer_dir /freesurfer \
+              --stages prep
 
-            cat ${OUTDIR}/outputs2_session_label/sub-01_ses-retest.long.sub-01/scripts/trac-preproc.done
-      - store_artifacts:
-          path: /tmp/outputs/
+          cat ${OUTDIR}/outputs2_session_label/sub-01_ses-retest.long.sub-01/scripts/trac-preproc.done
+    - store_artifacts:
+        path: /tmp/outputs/
 
   # TEST 4 freesurfer
   test_freesurfer:
@@ -347,137 +344,137 @@ jobs:
       image: ubuntu-2204:2022.10.2
     working_directory: /tmp/data
     steps:
-      - run:
-          name: Install parallel gzip
-          command: |
-            sudo apt-get update && sudo apt-get install -y pigz
-      - restore_cache:
-          keys:
-            - docker-v1-{{ .Branch }}-{{ .Revision }}
-            - docker-v1-{{ .Branch }}-
-            - docker-v1-master-
-            - docker-v1-
+    - run:
+        name: Install parallel gzip
+        command: |
+          sudo apt-get update && sudo apt-get install -y pigz
+    - restore_cache:
+        keys:
+        - docker-v1-{{ .Branch }}-{{ .Revision }}
+        - docker-v1-{{ .Branch }}-
+        - docker-v1-master-
+        - docker-v1-
 
-      - restore_cache:
-          keys:
-            - data-v1-{{ .Revision }}
-            - data-v1-
+    - restore_cache:
+        keys:
+        - data-v1-{{ .Revision }}
+        - data-v1-
 
-      - run:
-          name: Load Docker
-          no_output_timeout: 30m
-          command: |
-            docker info
-            set +o pipefail
-            pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
-            docker images
-      - run:
-          name: make output directory
-          command: mkdir -p ${OUTDIR}
-      - run:
-          name: participant level tests for sesseion flag in ds114_test2
-          no_output_timeout: 60m
-          command: |
-            mkdir -p ${OUTDIR}/outputs1_fs_tests/tracula
-            mkdir -p ${OUTDIR}/outputs1_fs_tests/freesurfer
+    - run:
+        name: Load Docker
+        no_output_timeout: 30m
+        command: |
+          docker info
+          set +o pipefail
+          pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
+          docker images
+    - run:
+        name: make output directory
+        command: mkdir -p ${OUTDIR}
+    - run:
+        name: participant level tests for sesseion flag in ds114_test2
+        no_output_timeout: 60m
+        command: |
+          mkdir -p ${OUTDIR}/outputs1_fs_tests/tracula
+          mkdir -p ${OUTDIR}/outputs1_fs_tests/freesurfer
 
-            docker run -ti --rm \
-            -v ${DATADIR}/ds114_test1:/bids_dataset \
-            -v ${OUTDIR}/outputs1_fs_tests:/outputs \
-              bids/${CIRCLE_PROJECT_REPONAME}:latest \
-                /bids_dataset \
-                /outputs \
-                participant \
-                --participant_label 01 \
-                --license_key="~/test.key" \
-                --freesurfer_dir /outputs/freesurfer \
-                --run-freesurfer-tests-only
+          docker run -ti --rm \
+          -v ${DATADIR}/ds114_test1:/bids_dataset \
+          -v ${OUTDIR}/outputs1_fs_tests:/outputs \
+            bids/${CIRCLE_PROJECT_REPONAME}:latest \
+              /bids_dataset \
+              /outputs \
+              participant \
+              --participant_label 01 \
+              --license_key="~/test.key" \
+              --freesurfer_dir /outputs/freesurfer \
+              --run-freesurfer-tests-only
 
-            cat ${OUTDIR}/outputs1_fs_tests/freesurfer/sub-01/scripts/recon-all.done
-      - store_artifacts:
-          path: /tmp/outputs/
+          cat ${OUTDIR}/outputs1_fs_tests/freesurfer/sub-01/scripts/recon-all.done
+    - store_artifacts:
+        path: /tmp/outputs/
 
   deploy:
     machine:
       image: ubuntu-2204:2022.10.2
     steps:
-      - run:
-          name: Install parallel gzip
-          command: |
-            sudo apt-get update && sudo apt-get install -y pigz
-      - restore_cache:
-          keys:
-            - docker-v1-{{ .Branch }}-{{ .Revision }}
-            - docker-v1-{{ .Branch }}-
-            - docker-v1-master-
-            - docker-v1-
+    - run:
+        name: Install parallel gzip
+        command: |
+          sudo apt-get update && sudo apt-get install -y pigz
+    - restore_cache:
+        keys:
+        - docker-v1-{{ .Branch }}-{{ .Revision }}
+        - docker-v1-{{ .Branch }}-
+        - docker-v1-master-
+        - docker-v1-
 
           # Load Docker
-      - run:
-          name: Load Docker
-          no_output_timeout: 30m
-          command: |
-            docker info
-            set +o pipefail
-            pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
-            docker images
-      - run:
-          name: push to dockerhub
-          command: |
-            wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/circleci/push_docker.sh
-            bash push_docker.sh
+    - run:
+        name: Load Docker
+        no_output_timeout: 30m
+        command: |
+          docker info
+          set +o pipefail
+          pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
+          docker images
+    - run:
+        name: push to dockerhub
+        command: |
+          wget https://raw.githubusercontent.com/bids-apps/maintenance-tools/main/circleci/push_docker.sh
+          bash push_docker.sh
 
 workflows:
   version: 2
   build_test_deploy:
     jobs:
-      - get_data:
-          filters:
-            tags:
-              only: /.*/
-      - build:
-          filters:
-            tags:
-              only: /.*/
-      - test_1ses:
-          requires:
-            - get_data
-            - build
-          filters:
-            tags:
-              only: /.*/
-      - test_ds114_test:
-          requires:
-            - get_data
-            - build
-          matrix:
-            parameters:
-              dataset: ["1", "2"]            
-          filters:
-            tags:
-              only: /.*/
-      - test_session:
-          requires:
-            - get_data
-            - build
-          filters:
-            tags:
-              only: /.*/
-      - test_freesurfer:
-          requires:
-            - get_data
-            - build
-          filters:
-            tags:
-              only: /.*/
-      - deploy:
-          requires:
-            - test_1ses
-            - test_ds114_test
-            - test_session
-            - test_freesurfer
-          filters:
-            branches:
-              only: master
-            tags:
-              only: /.*/
+    - get_data:
+        filters:
+          tags:
+            only: /.*/
+    - build:
+        filters:
+          tags:
+            only: /.*/
+    - test_1ses:
+        requires:
+        - get_data
+        - build
+        filters:
+          tags:
+            only: /.*/
+    - test_ds114_test:
+        requires:
+        - get_data
+        - build
+        matrix:
+          parameters:
+            dataset: ['1', '2']
+        filters:
+          tags:
+            only: /.*/
+    - test_session:
+        requires:
+        - get_data
+        - build
+        filters:
+          tags:
+            only: /.*/
+    - test_freesurfer:
+        requires:
+        - get_data
+        - build
+        filters:
+          tags:
+            only: /.*/
+    - deploy:
+        requires:
+        - test_1ses
+        - test_ds114_test
+        - test_session
+        - test_freesurfer
+        filters:
+          branches:
+            only: master
+          tags:
+            only: /.*/
