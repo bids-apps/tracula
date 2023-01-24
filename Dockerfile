@@ -3,7 +3,7 @@ FROM neurodebian:bionic-non-free
 ## BIDS Validator
 RUN apt-get update -qq \
            && apt-get install -y -q --no-install-recommends \
-                  ca-certificates curl apt-utils \
+                  ca-certificates curl apt-utils build-essential \
            && rm -rf /var/lib/apt/lists/*
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get update -qq \
