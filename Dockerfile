@@ -1,5 +1,7 @@
 FROM neurodebian:bionic-non-free
 
+ARG DEBIAN_FRONTEND="noninteractive"
+
 ## BIDS Validator
 RUN apt-get update -qq \
            && apt-get install -y -q --no-install-recommends \
