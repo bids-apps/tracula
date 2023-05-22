@@ -49,9 +49,9 @@ jobs:
       run: |
         mkdir -p ${HOME}/outputs${{ matrix.dataset }}
 
-    - name: participant 01
+    - name: participant level
       run: |
-        docker run -ti --rm \
+        docker run -t --rm \
         -v ${HOME}/data/ds114_test${{ matrix.dataset }}:/bids_dataset \
         -v ${HOME}/outputs${{ matrix.dataset }}:/outputs \
         -v ${HOME}/data/ds114_test${{ matrix.dataset }}_freesurfer:/freesurfer \
