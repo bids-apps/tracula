@@ -476,7 +476,5 @@ workflows:
         - test_session
         - test_freesurfer
         filters:
-          branches:
-            only: master
           tags:
             only: /.*/
